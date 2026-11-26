@@ -1,1 +1,112 @@
+name: NOOR Android Build
 
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noor-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Locate and extract source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARCHIVE="${GITHUB_WORKSPACE}/NOOR_Source.zip"
+          if [ ! -f "$ARCHIVE" ]; then
+            echo "NOOR_Source.zip was not found in the repository root."
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/noor-extracted"
+          unzip -q "$ARCHIVE" -d "$RUNNER_TEMP/noor-extracted"
+          PUBSPEC="$(find "$RUNNER_TEMP/noor-extracted" -name pubspec.yaml -print -quit)"
+          if [ -z "$PUBSPEC" ]; then
+            echo "The archive does not contain a Flutter project (pubspec.yaml)."
+            exit 1
+          fi
+          PROJECT_DIR="$(dirname "$PUBSPEC")"
+          mkdir -p "$RUNNER_TEMP/noor-workspace"
+          cp -a "$PROJECT_DIR"/. "$RUNNER_TEMP/noor-workspace/"
+          echo "NOOR_PROJECT_DIR=$RUNNER_TEMP/noor-workspace" >> "$GITHUB_ENV"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Generate Android platform files when absent
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -d android ]; then
+            flutter create --platforms=android --org com.noor --project-name noor .
+          fi
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          if [ -f "$MANIFEST" ]; then
+            sed -i 's/android:label="[^"]*"/android:label="نور | NOOR"/' "$MANIFEST"
+          fi
+
+      - name: Install dependencies
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        run: flutter pub get
+
+      - name: Format Dart sources
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        run: dart format lib test
+
+      - name: Package the normalized source archive
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f NOOR_Source.zip
+          zip -qr "$RUNNER_TEMP/NOOR_Source.zip" . \
+            -x "./build/*" "./.dart_tool/*" "./.packages" "./.flutter-plugins*" "./android/local.properties" "./android/.gradle/*" "./NOOR_Source.zip"
+          cp "$RUNNER_TEMP/NOOR_Source.zip" ./NOOR_Source.zip
+
+      - name: Analyze
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        run: flutter analyze
+
+      - name: Test
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        run: flutter test
+
+      - name: Build APK
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        run: flutter build apk --release
+
+      - name: Build Android App Bundle
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        run: flutter build appbundle --release
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: NOOR-Android-Release
+          if-no-files-found: error
+          path: |
+            ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
+            ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/bundle/release/app-release.aab
+            ${{ env.NOOR_PROJECT_DIR }}/NOOR_Source.zip
