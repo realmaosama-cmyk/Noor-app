@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Locate and extract source archive
         shell: bash
@@ -43,7 +43,7 @@ jobs:
           echo "NOOR_PROJECT_DIR=$RUNNER_TEMP/noor-workspace" >> "$GITHUB_ENV"
 
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
@@ -52,6 +52,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: "3.50.1"
           cache: true
 
       - name: Generate Android platform files when absent
@@ -65,6 +66,17 @@ jobs:
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           if [ -f "$MANIFEST" ]; then
             sed -i 's/android:label="[^"]*"/android:label="نور | NOOR"/' "$MANIFEST"
+          fi
+
+      - name: Verify project widget test is present
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f test/widget_test.dart
+          if grep -q "MyApp" test/widget_test.dart; then
+            echo "Unexpected Flutter template test detected; expected the NOOR widget test."
+            exit 1
           fi
 
       - name: Install dependencies
@@ -102,7 +114,7 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Upload release artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: NOOR-Android-Release
           if-no-files-found: error
