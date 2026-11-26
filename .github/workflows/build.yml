@@ -1,4 +1,5 @@
 name: NOOR Android Build
+# Trigger a fresh validation after the learner-screen syntax fix.
 
 on:
   push:
