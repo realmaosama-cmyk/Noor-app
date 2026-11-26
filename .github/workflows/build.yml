@@ -33,10 +33,9 @@ jobs:
           PUBSPEC="$(find "$RUNNER_TEMP/noor-extracted" -name pubspec.yaml -print -quit)"
           test -n "$PUBSPEC"
           PROJECT_DIR="$(dirname "$PUBSPEC")"
-          PATCH_B64="$GITHUB_WORKSPACE/.github/noor-enhancements.patch.gz.b64"
-          if [ -f "$PATCH_B64" ] && [ ! -f "$PROJECT_DIR/lib/features/home/feature_hub_screen.dart" ]; then
-            base64 --decode "$PATCH_B64" | gzip -dc > "$RUNNER_TEMP/noor-enhancements.patch"
-            patch --batch -p1 -d "$PROJECT_DIR" < "$RUNNER_TEMP/noor-enhancements.patch"
+          OVERLAY_B64="$GITHUB_WORKSPACE/.github/noor-overlay.tar.gz.b64"
+          if [ -f "$OVERLAY_B64" ] && [ ! -f "$PROJECT_DIR/lib/features/home/feature_hub_screen.dart" ]; then
+            base64 --decode "$OVERLAY_B64" | gzip -dc | tar -xz -C "$PROJECT_DIR"
           fi
           mkdir -p "$RUNNER_TEMP/noor-workspace"
           cp -a "$PROJECT_DIR"/. "$RUNNER_TEMP/noor-workspace/"
