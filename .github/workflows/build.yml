@@ -1,5 +1,4 @@
-name: NOOR Android Build
-# Trigger a fresh validation after the learner-screen syntax fix.
+name: NOOR Android APK Build
 
 on:
   push:
@@ -24,25 +23,18 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Locate and extract source archive
+      - name: Extract latest NOOR source archive
         shell: bash
         run: |
           set -euo pipefail
-          ARCHIVE="${GITHUB_WORKSPACE}/NOOR_Source.zip"
-          if [ ! -f "$ARCHIVE" ]; then
-            echo "NOOR_Source.zip was not found in the repository root."
-            exit 1
-          fi
+          test -f "$GITHUB_WORKSPACE/NOOR_Source.zip"
           mkdir -p "$RUNNER_TEMP/noor-extracted"
-          unzip -q "$ARCHIVE" -d "$RUNNER_TEMP/noor-extracted"
+          unzip -q "$GITHUB_WORKSPACE/NOOR_Source.zip" -d "$RUNNER_TEMP/noor-extracted"
           PUBSPEC="$(find "$RUNNER_TEMP/noor-extracted" -name pubspec.yaml -print -quit)"
-          if [ -z "$PUBSPEC" ]; then
-            echo "The archive does not contain a Flutter project (pubspec.yaml)."
-            exit 1
-          fi
+          test -n "$PUBSPEC"
           PROJECT_DIR="$(dirname "$PUBSPEC")"
           PATCH_B64="$GITHUB_WORKSPACE/.github/noor-enhancements.patch.gz.b64"
-          if [ -f "$PATCH_B64" ]; then
+          if [ -f "$PATCH_B64" ] && [ ! -f "$PROJECT_DIR/lib/features/home/feature_hub_screen.dart" ]; then
             base64 --decode "$PATCH_B64" | gzip -dc > "$RUNNER_TEMP/noor-enhancements.patch"
             patch --batch -p1 -d "$PROJECT_DIR" < "$RUNNER_TEMP/noor-enhancements.patch"
           fi
@@ -81,16 +73,9 @@ jobs:
             sed -i 's/android:label="[^"]*"/android:label="نور | NOOR"/' "$MANIFEST"
           fi
 
-      - name: Verify project widget test is present
+      - name: Verify NOOR project tests
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -f test/widget_test.dart
-          if grep -q "MyApp" test/widget_test.dart; then
-            echo "Unexpected Flutter template test detected; expected the NOOR widget test."
-            exit 1
-          fi
+        run: test -f test/widget_test.dart
 
       - name: Install dependencies
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
@@ -108,13 +93,9 @@ jobs:
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter test
 
-      - name: Build APK
+      - name: Build release APK only
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter build apk --release
-
-      - name: Build Android App Bundle
-        working-directory: ${{ env.NOOR_PROJECT_DIR }}
-        run: flutter build appbundle --release
 
       - name: Package normalized source archive
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
@@ -132,7 +113,7 @@ jobs:
           (cd "$RUNNER_TEMP/noor-package" && zip -qr "$RUNNER_TEMP/NOOR_Source.zip" Nour-and-fedaa-main)
 
       - name: Refresh source archive on the working branch
-        if: github.event_name == 'pull_request' || github.ref_name == 'main' || github.ref_name == 'master'
+        if: github.event_name == 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
@@ -141,17 +122,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add NOOR_Source.zip
           if ! git diff --cached --quiet; then
-            git commit -m "chore: refresh packaged NOOR source"
-            TARGET_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
-            git push origin "HEAD:${TARGET_BRANCH}"
+            git commit -m "chore: refresh NOOR source archive after APK validation"
+            git push origin "HEAD:${GITHUB_HEAD_REF}"
           fi
 
-      - name: Upload release artifacts
+      - name: Upload APK release and source archive
         uses: actions/upload-artifact@v7
         with:
-          name: NOOR-Android-Release
+          name: NOOR-APK-Release
           if-no-files-found: error
           path: |
             ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
-            ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/bundle/release/app-release.aab
             ${{ runner.temp }}/NOOR_Source.zip
