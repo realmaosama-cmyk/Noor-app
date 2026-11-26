@@ -34,7 +34,7 @@ jobs:
           PUBSPEC="$(find "$RUNNER_TEMP/noor-extracted" -name pubspec.yaml -print -quit)"
           test -n "$PUBSPEC"
           PROJECT_DIR="$(dirname "$PUBSPEC")"
-          OVERLAY_B64="$GITHUB_WORKSPACE/.github/noor-overlay.tar.gz.b64"
+          OVERLAY_B64="$GITHUB_WORKSPACE/.github/noor-overlay.tar.b64"
           if [ -f "$OVERLAY_B64" ] && [ ! -f "$PROJECT_DIR/lib/features/home/feature_hub_screen.dart" ]; then
             base64 --decode "$OVERLAY_B64" | tar -xf - -C "$PROJECT_DIR"
           fi
