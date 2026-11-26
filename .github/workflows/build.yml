@@ -1,4 +1,5 @@
 name: NOOR Android APK Build
+# Validate the full NOOR overlay on every PR update.
 
 on:
   push:
