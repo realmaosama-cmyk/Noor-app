@@ -36,7 +36,7 @@ jobs:
           PROJECT_DIR="$(dirname "$PUBSPEC")"
           OVERLAY_B64="$GITHUB_WORKSPACE/.github/noor-overlay.tar.gz.b64"
           if [ -f "$OVERLAY_B64" ] && [ ! -f "$PROJECT_DIR/lib/features/home/feature_hub_screen.dart" ]; then
-            base64 --decode "$OVERLAY_B64" | gzip -dc | tar -xz -C "$PROJECT_DIR"
+            base64 --decode "$OVERLAY_B64" | tar -xf - -C "$PROJECT_DIR"
           fi
           mkdir -p "$RUNNER_TEMP/noor-workspace"
           cp -a "$PROJECT_DIR"/. "$RUNNER_TEMP/noor-workspace/"
