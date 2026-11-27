@@ -156,6 +156,32 @@ try:
 except Exception as exc:
     errors.append(f"voice_phrases.json: unable to validate voice bank: {exc}")
 
+# The original project media must be present in the packaged asset tree.
+media_root = ROOT / "media"
+if not media_root.is_dir():
+    errors.append("media/: missing migrated original art/audio/video assets")
+else:
+    art_files = list((media_root / "art").glob("*.webp"))
+    sfx_files = list((media_root / "audio" / "sfx").glob("*.wav"))
+    song_files = list((media_root / "audio" / "song").glob("*.mp3"))
+    icon_files = list((media_root / "icons").glob("*.png"))
+    video_files = list((media_root / "videos").glob("*.mp4"))
+    all_media = [p for p in media_root.rglob("*") if p.is_file()]
+    if len(art_files) != 161:
+        errors.append(f"media/art: expected 161 illustrations, found {len(art_files)}")
+    if len(sfx_files) != 6:
+        errors.append(f"media/audio/sfx: expected 6 effects, found {len(sfx_files)}")
+    if len(song_files) != 1:
+        errors.append(f"media/audio/song: expected 1 song, found {len(song_files)}")
+    if len(icon_files) != 2:
+        errors.append(f"media/icons: expected 2 preserved source icons, found {len(icon_files)}")
+    if len(video_files) != 1:
+        errors.append(f"media/videos: expected 1 cinematic intro, found {len(video_files)}")
+    if len(all_media) != 172:
+        errors.append(f"media/: expected 172 migrated files, found {len(all_media)}")
+    if any(path.stat().st_size <= 0 for path in all_media):
+        errors.append("media/: empty or zero-byte media asset detected")
+
 # The Quran is a strict integrity gate, not an optional legacy pack.
 quran_path = ROOT / "quran_surahs.json"
 if not quran_path.is_file():
