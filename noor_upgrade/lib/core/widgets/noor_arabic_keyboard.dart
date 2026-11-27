@@ -12,9 +12,9 @@ class NoorArabicKeyboard extends StatefulWidget {
 
 class _NoorArabicKeyboardState extends State<NoorArabicKeyboard> {
   static const _rows = <List<String>>[
-    ['ض', 'ص', 'ث', 'ق', 'ف', 'غ', 'ع', 'ه', 'خ', 'ح', 'ج', 'د'],
-    ['ش', 'س', 'ي', 'ب', 'ل', 'ا', 'ت', 'ن', 'م', 'ك', 'ط'],
-    ['ئ', 'ء', 'ؤ', 'ر', 'لا', 'ى', 'ة', 'و', 'ز', 'ظ', 'ذ'],
+    ['ض', 'ص', 'ث', 'ق', 'ف', 'غ', 'ع', 'ه', 'خ', 'ح'],
+    ['ج', 'د', 'ش', 'س', 'ي', 'ب', 'ل', 'ا', 'ت', 'ن'],
+    ['م', 'ك', 'ة', 'ى', 'و', 'ز', 'ظ', 'ذ', 'ء', 'ئ', 'ؤ', 'ر'],
   ];
 
   @override
