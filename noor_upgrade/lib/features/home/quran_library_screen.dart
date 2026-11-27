@@ -34,11 +34,26 @@ class _QuranLibraryScreenState extends State<QuranLibraryScreen> {
         .toList()
       ..sort((a, b) => (a['surahNumber'] as int)
           .compareTo(b['surahNumber'] as int));
-    final totalAyahs = values.fold<int>(
-      0,
-      (total, surah) => total + (surah['ayahCount'] as int),
-    );
-    if (values.length != 114 || totalAyahs != 6236) {
+    final surahNumbers = values.map((item) => item['surahNumber'] as int).toSet();
+    var totalAyahs = 0;
+    for (final surah in values) {
+      final ayahs = (surah['ayahs'] as List);
+      final declaredCount = surah['ayahCount'] as int;
+      if (ayahs.length != declaredCount) {
+        throw StateError('Surah ${surah['surahNumber']} count mismatch: ${ayahs.length}/$declaredCount');
+      }
+      for (var index = 0; index < ayahs.length; index++) {
+        final ayah = Map<String, dynamic>.from(ayahs[index] as Map);
+        if (ayah['number'] != index + 1) {
+          throw StateError('Invalid ayah order in surah ${surah['surahNumber']}');
+        }
+      }
+      totalAyahs += ayahs.length;
+    }
+    if (values.length != 114 ||
+        surahNumbers.length != 114 ||
+        !List<int>.generate(114, (index) => index + 1).every(surahNumbers.contains) ||
+        totalAyahs != 6236) {
       throw StateError(
         'Quran dataset incomplete: ${values.length} surahs / $totalAyahs ayahs',
       );
