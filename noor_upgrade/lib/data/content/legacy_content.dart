@@ -70,22 +70,7 @@ class LegacyContentRepository {
     for (final file in files) {
       try {
         final raw = await rootBundle.loadString('assets/content/legacy/$file');
-        final decoded = jsonDecode(raw);
-        if (decoded is! Map) continue;
-        final root = Map<String, dynamic>.from(decoded);
-        final candidates = <Map<String, dynamic>>[];
-        for (final key in const ['lessons', 'hadiths', 'games', 'surahs', 'ayat', 'verses', 'challenges']) {
-          final values = root[key];
-          if (values is List) {
-            for (final value in values) {
-              if (value is Map) candidates.add(Map<String, dynamic>.from(value));
-            }
-          }
-        }
-        if (candidates.isEmpty && root.containsKey('title')) candidates.add(root);
-
-        for (final map in candidates) {
-          final item = _parse(map, file);
+        for (final item in parseDocument(raw, file)) {
           if (item == null || !item.suitableFor(age) || !_belongsToSection(item, sectionId, file)) continue;
           final titleKey = _normalize(item.title);
           final duplicateKey = titleKey;
@@ -105,6 +90,28 @@ class LegacyContentRepository {
     }
     // Preserve curriculum order (including week 1 -> 24) and source order.
     return List<LegacyContentItem>.unmodifiable(result);
+  }
+
+  /// Public parser entry point so regression tests exercise the production normalizer.
+  static List<LegacyContentItem> parseDocument(String raw, String file) {
+    final decoded = jsonDecode(raw);
+    if (decoded is! Map) return const <LegacyContentItem>[];
+    final root = Map<String, dynamic>.from(decoded);
+    final candidates = <Map<String, dynamic>>[];
+    for (final key in const ['lessons', 'hadiths', 'games', 'surahs', 'ayat', 'verses', 'challenges']) {
+      final values = root[key];
+      if (values is List) {
+        for (final value in values) {
+          if (value is Map) candidates.add(Map<String, dynamic>.from(value));
+        }
+      }
+    }
+    if (candidates.isEmpty && (root.containsKey('title') || root.containsKey('name'))) {
+      candidates.add(root);
+    }
+    return List<LegacyContentItem>.unmodifiable(
+      candidates.map((map) => _parse(map, file)).whereType<LegacyContentItem>(),
+    );
   }
 
   static bool _belongsToSection(LegacyContentItem item, String section, String file) {
