@@ -390,14 +390,44 @@ class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
                 style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700),
               ),
             if (answered)
-              Text(
-                isCorrect
-                    ? '${widget.question['praise'] ?? 'إجابة موفقة!'}'
-                    : '${widget.question['hint'] ?? 'حاول مرة أخرى بعد مراجعة الدرس.'}',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  color: isCorrect ? Colors.green.shade700 : Colors.orange.shade800,
-                  fontWeight: FontWeight.w700,
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 350),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: ScaleTransition(scale: animation, child: child),
+                  ),
+                  child: Row(
+                    key: ValueKey<bool>(isCorrect),
+                    children: [
+                      Image.asset(
+                        isCorrect
+                            ? 'assets/content/legacy/media/art/nour_cheer.webp'
+                            : 'assets/content/legacy/media/art/nour_think.webp',
+                        width: 68,
+                        height: 68,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) =>
+                            const SizedBox(width: 68, height: 68),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          isCorrect
+                              ? '${widget.question['praise'] ?? 'إجابة موفقة!'}'
+                              : '${widget.question['hint'] ?? 'حاول مرة أخرى بعد مراجعة الدرس.'}',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: isCorrect
+                                ? Colors.green.shade700
+                                : Colors.orange.shade800,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             if (answered)
