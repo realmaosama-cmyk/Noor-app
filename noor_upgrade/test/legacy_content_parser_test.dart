@@ -139,5 +139,23 @@ void main() {
       expect(items.single.questions.single['question'], 'كم ركعة في الفجر؟');
       expect(items.single.questions.single['answerIndex'], 0);
     });
+
+    test('maps legacy age bands to safe child age ranges', () {
+      final items = LegacyContentRepository.parseDocument(
+        jsonEncode({
+          'title': 'محتوى للأطفال',
+          'band': 'atfal',
+          'body': 'محتوى تجريبي',
+          'source': 'نشاط تعليمي',
+        }),
+        'legacy_band.json',
+      );
+
+      expect(items, hasLength(1));
+      expect(items.single.minAge, 3);
+      expect(items.single.maxAge, 8);
+      expect(items.single.suitableFor(6), isTrue);
+      expect(items.single.suitableFor(10), isFalse);
+    });
   });
 }
