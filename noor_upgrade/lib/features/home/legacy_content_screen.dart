@@ -115,17 +115,7 @@ class LegacyContentScreen extends ConsumerWidget {
                                       child: Text('فكّر وأجب', style: TextStyle(fontWeight: FontWeight.w900)),
                                     ),
                                     for (final question in item.questions)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8),
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            '${question['question'] ?? question['prompt'] ?? question['text'] ?? ''}',
-                                            textAlign: TextAlign.right,
-                                            style: const TextStyle(height: 1.5),
-                                          ),
-                                        ),
-                                      ),
+                                      _LegacyQuestionCard(question: question),
                                   ],
                                   if (item.source.isNotEmpty) ...[
                                     const SizedBox(height: 8),
@@ -149,6 +139,78 @@ class LegacyContentScreen extends ConsumerWidget {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+
+class _LegacyQuestionCard extends StatefulWidget {
+  const _LegacyQuestionCard({required this.question});
+
+  final Map<String, dynamic> question;
+
+  @override
+  State<_LegacyQuestionCard> createState() => _LegacyQuestionCardState();
+}
+
+class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
+  int? _selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final prompt = widget.question['question'] ??
+        widget.question['prompt'] ??
+        widget.question['text'] ??
+        '';
+    final rawOptions = widget.question['options'];
+    final options = rawOptions is List
+        ? rawOptions.whereType<String>().toList(growable: false)
+        : const <String>[];
+    final answerIndex = widget.question['answerIndex'];
+    final correct = answerIndex is num ? answerIndex.toInt() : -1;
+    final answered = _selected != null;
+    final isCorrect = _selected == correct;
+
+    return Card(
+      margin: const EdgeInsets.only(top: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('$prompt', textAlign: TextAlign.right,
+                style: const TextStyle(fontWeight: FontWeight.w800, height: 1.5)),
+            for (var index = 0; index < options.length; index++)
+              RadioListTile<int>(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: index,
+                groupValue: _selected,
+                onChanged: answered ? null : (value) => setState(() => _selected = value),
+                title: Text(options[index], textAlign: TextAlign.right),
+              ),
+            if (answered)
+              Text(
+                isCorrect
+                    ? '${widget.question['praise'] ?? 'إجابة موفقة!'}'
+                    : '${widget.question['hint'] ?? 'حاول مرة أخرى بعد مراجعة الدرس.'}',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: isCorrect ? Colors.green.shade700 : Colors.orange.shade800,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            if (answered)
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  onPressed: () => setState(() => _selected = null),
+                  child: const Text('حاول مرة أخرى'),
+                ),
+              ),
+          ],
         ),
       ),
     );
