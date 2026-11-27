@@ -15,7 +15,11 @@
         "اسأل سؤالاً واحداً.",
         "شارك ما اكتشفته مع أسرتك."
       ],
-      "source": "نظام تحفيز تربوي أصلي من NOOR"
+      "source": "نظام تحفيز تربوي أصلي من NOOR",
+      "category": "achievements",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nac_002",
@@ -30,7 +34,11 @@
         "سجل محاولة أولى.",
         "جرب استراتيجية جديدة ولاحظ الفرق."
       ],
-      "source": "نظام تحفيز تربوي أصلي من NOOR"
+      "source": "نظام تحفيز تربوي أصلي من NOOR",
+      "category": "achievements",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nac_003",
@@ -45,7 +53,11 @@
         "اتفق مع ولي الأمر على خطة.",
         "نفذ وقيّم الأثر دون تصوير أو نشر بيانات شخصية."
       ],
-      "source": "نظام تحفيز تربوي أصلي من NOOR"
+      "source": "نظام تحفيز تربوي أصلي من NOOR",
+      "category": "achievements",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nac_004",
@@ -60,7 +72,11 @@
         "استمع أو اقرأ مع شخص بالغ.",
         "شارك أكثر جزء أعجبك."
       ],
-      "source": "نظام إنجازات NOOR؛ تشجيع بلا مقارنة"
+      "source": "نظام إنجازات NOOR؛ تشجيع بلا مقارنة",
+      "category": "achievements",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nac_005",
@@ -75,7 +91,11 @@
         "قسمه إلى ثلاث خطوات.",
         "راجع ما تعلمته واحتفل بالتقدم."
       ],
-      "source": "نظام إنجازات NOOR"
+      "source": "نظام إنجازات NOOR",
+      "category": "achievements",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nac_006",
@@ -90,7 +110,11 @@
         "نفذ المشروع بموافقة ولي الأمر.",
         "اكتب ما نجح وما ستطوره لاحقاً."
       ],
-      "source": "نظام إنجازات NOOR"
+      "source": "نظام إنجازات NOOR",
+      "category": "achievements",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     }
   ]
 }
