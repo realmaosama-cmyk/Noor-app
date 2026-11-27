@@ -19,7 +19,8 @@
       "category": "prophets",
       "difficulty": "easy",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_002",
@@ -38,7 +39,8 @@
       "category": "prophets",
       "difficulty": "medium",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_003",
@@ -57,7 +59,8 @@
       "category": "prophets",
       "difficulty": "advanced",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_004",
@@ -76,7 +79,8 @@
       "category": "prophets",
       "difficulty": "easy",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_005",
@@ -95,7 +99,8 @@
       "category": "prophets",
       "difficulty": "medium",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_006",
@@ -114,7 +119,8 @@
       "category": "prophets",
       "difficulty": "advanced",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "noor_prophets_007",
@@ -145,7 +151,8 @@
       "category": "prophets",
       "difficulty": "easy",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "noor_prophets_008",
@@ -176,7 +183,8 @@
       "category": "prophets",
       "difficulty": "medium",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "noor_prophets_009",
@@ -207,7 +215,8 @@
       "category": "prophets",
       "difficulty": "advanced",
       "content_verified": false,
-      "review_status": "pending"
+      "review_status": "pending",
+      "citation_status": "needs_review"
     }
   ]
 }
