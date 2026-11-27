@@ -1,9 +1,9 @@
-# NOOR 1.3
+# NOOR 1.4 — Legacy content and refreshed identity
 
-- Nine core Islamic sections with lessons and quizzes.
-- 30 learning worlds and 90 lessons.
-- Daily Ayah and Hadith, per-child prayer tracker, and streamed Alafasy recitation for seven short surahs.
-- New memory and Arabic letter-building games.
-- Animated themed backgrounds, night mode, parent reporting, and daily usage limit.
-- Release output: signed APK only; no AAB.
-- Existing local learner data is preserved by the SQLite v4 additive migration.
+- Preserves the existing NOOR 1.3 application, catalog, learner profiles, progress, and SQLite v4 migration.
+- Imports 89 JSON datasets from the legacy Nour-and-fedaa content branch and its supplemental Arabic letters/prayer branch.
+- Bundles the legacy Qur'an, prayer, adhkar, akhlaq, seerah, figures, prophets, games, lesson plans, weekly curricula, and level-check data.
+- Loads age-appropriate legacy items inside the matching NOOR sections, with original source metadata where supplied.
+- Refreshes the animated in-app identity to an open book, crescent, and guiding star; updates the Android adaptive launcher vector and adds a scalable NOOR master SVG logo.
+- Release output remains signed APK only; no AAB.
+- The legacy source repository is read-only and unchanged.
