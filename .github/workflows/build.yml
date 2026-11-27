@@ -29,6 +29,7 @@ jobs:
           set -euo pipefail
           test -f "$GITHUB_WORKSPACE/NOOR_Source.zip"
           mkdir -p "$RUNNER_TEMP/noor-extracted"
+          unzip -tq "$GITHUB_WORKSPACE/NOOR_Source.zip" >/dev/null
           unzip -q "$GITHUB_WORKSPACE/NOOR_Source.zip" -d "$RUNNER_TEMP/noor-extracted"
           PUBSPEC="$(find "$RUNNER_TEMP/noor-extracted" -name pubspec.yaml -print -quit)"
           test -n "$PUBSPEC"
@@ -58,10 +59,13 @@ jobs:
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/quran_library_screen.dart" "$PROJECT_DIR/lib/features/home/quran_library_screen.dart"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/quran_recitation_screen.dart" "$PROJECT_DIR/lib/features/home/quran_recitation_screen.dart"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/intro_video_screen.dart" "$PROJECT_DIR/lib/features/home/intro_video_screen.dart"
+          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/level_check_screen.dart" "$PROJECT_DIR/lib/features/home/level_check_screen.dart"
           mkdir -p "$PROJECT_DIR/lib/core/services"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_sound_service.dart" "$PROJECT_DIR/lib/core/services/noor_sound_service.dart"
+          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_voice.dart" "$PROJECT_DIR/lib/core/services/noor_voice.dart"
           mkdir -p "$PROJECT_DIR/test"
           cp -a "$GITHUB_WORKSPACE/noor_upgrade/test/." "$PROJECT_DIR/test/"
+          python3 -m py_compile "$GITHUB_WORKSPACE"/.github/scripts/*.py "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py"
           python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
           test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
           test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
@@ -97,6 +101,8 @@ jobs:
           fi
           chmod +x tool/configure_android_branding.sh
           ./tool/configure_android_branding.sh
+          grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml
+          grep -q "android.intent.action.TTS_SERVICE" android/app/src/main/AndroidManifest.xml
 
       - name: Verify signing secrets and configure release signing
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))

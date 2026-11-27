@@ -24,7 +24,7 @@ def norm(value):
 def records(data):
     if isinstance(data, dict):
         found = False
-        for key in ("lessons", "hadiths", "games", "surahs", "ayat", "verses", "challenges"):
+        for key in ("lessons", "hadiths", "games", "surahs", "ayat", "verses", "challenges", "questions", "phrases"):
             value = data.get(key)
             if isinstance(value, list):
                 found = True
@@ -138,6 +138,10 @@ for filename, collection, minimum in (
         values = data.get(collection, [])
         if not isinstance(values, list) or len(values) < minimum:
             errors.append(f"{filename}: expected at least {minimum} {collection}, found {len(values) if isinstance(values, list) else 'invalid'}")
+        elif collection == "phrases" and any(
+            not isinstance(phrase, str) or not phrase.strip() for phrase in values
+        ):
+            errors.append(f"{filename}: empty or invalid phrase entry detected")
     except Exception as exc:
         errors.append(f"{filename}: unable to validate migrated content: {exc}")
 
@@ -182,6 +186,73 @@ else:
     if any(path.stat().st_size <= 0 for path in all_media):
         errors.append("media/: empty or zero-byte media asset detected")
 
+# Validate the 24-week curriculum index and every lesson reference it exposes.
+content_ids = set()
+for path in ALL_JSON:
+    if path.name == "curriculum.json":
+        continue
+    try:
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
+        for record in records(data):
+            record_id = record.get("id")
+            if isinstance(record_id, str) and record_id.strip():
+                content_ids.add(record_id)
+    except Exception:
+        pass
+
+curriculum_path = ROOT / "curriculum.json"
+try:
+    curriculum = json.loads(curriculum_path.read_text(encoding="utf-8"))
+    weeks = curriculum.get("weeks", [])
+    if len(weeks) != 24:
+        errors.append(f"curriculum.json: expected 24 weeks, found {len(weeks)}")
+    for week in weeks:
+        week_number = week.get("week")
+        days = week.get("days", [])
+        if len(days) != 5:
+            errors.append(f"curriculum.json: week {week_number} should contain 5 days")
+        for day in days:
+            lesson_ids = day.get("lessons", [])
+            early_ids = day.get("earlyLessons", [])
+            if not isinstance(lesson_ids, list) or not isinstance(early_ids, list):
+                errors.append(f"curriculum.json: invalid lesson lists in week {week_number}, day {day.get('day')}")
+                continue
+            if not lesson_ids and not early_ids:
+                errors.append(f"curriculum.json: no lessons linked in week {week_number}, day {day.get('day')}")
+            for lesson_id in lesson_ids + early_ids:
+                if lesson_id not in content_ids:
+                    errors.append(f"curriculum.json: unresolved lesson id {lesson_id} in week {week_number}, day {day.get('day')}")
+except Exception as exc:
+    errors.append(f"curriculum.json: unable to validate 24-week index: {exc}")
+
+# The three original level-check banks are now consumed by the in-app review screen.
+for filename in ("atfal.json", "nashia.json", "murahiqun.json"):
+    path = ROOT / "levelcheck" / filename
+    try:
+        bank = json.loads(path.read_text(encoding="utf-8"))
+        questions = bank.get("questions", [])
+        if len(questions) != 12:
+            errors.append(f"levelcheck/{filename}: expected 12 questions, found {len(questions)}")
+        if bank.get("content_verified") is not False:
+            errors.append(f"levelcheck/{filename}: content_verified must remain false until human review")
+        for index, question in enumerate(questions, 1):
+            options = question.get("options")
+            answer = question.get("answer")
+            if not isinstance(question.get("text"), str) or not question["text"].strip():
+                errors.append(f"levelcheck/{filename} question {index}: missing prompt")
+            if (
+                not isinstance(options, list)
+                or len(options) < 2
+                or any(not isinstance(option, str) or not option.strip() for option in options)
+                or type(answer) is not int
+                or not 0 <= answer < len(options)
+            ):
+                errors.append(f"levelcheck/{filename} question {index}: invalid options or answer index")
+            if not isinstance(question.get("source"), str) or not question["source"].strip():
+                errors.append(f"levelcheck/{filename} question {index}: missing source note")
+    except Exception as exc:
+        errors.append(f"levelcheck/{filename}: unable to validate question bank: {exc}")
+
 # The Quran is a strict integrity gate, not an optional legacy pack.
 quran_path = ROOT / "quran_surahs.json"
 if not quran_path.is_file():
@@ -210,8 +281,11 @@ else:
         if ayah_total != 6236:
             errors.append(f"quran_surahs.json: expected 6,236 ayahs, found {ayah_total}")
         source = quran.get("source", {})
-        if source.get("name") != "Tanzil Quran Text (Uthmani)" or not re.fullmatch(r"[0-9a-f]{64}", source.get("upstream_sha256", "")):
-            errors.append("quran_surahs.json: missing Tanzil provenance or upstream SHA-256")
+        if (
+            source.get("name") != "Tanzil Quran Text (Uthmani)"
+            or source.get("upstream_sha256") != "bf4f57b968d03f4131c070b1e285da9be0e0a108a21c910e872801ca273312c8"
+        ):
+            errors.append("quran_surahs.json: Tanzil provenance or reviewed upstream checksum mismatch")
     except Exception as exc:
         errors.append(f"quran_surahs.json: invalid dataset: {exc}")
 
