@@ -1,0 +1,112 @@
+class _NoorMark extends StatefulWidget {
+  const _NoorMark({required this.size, required this.light});
+  final double size;
+  final bool light;
+  @override
+  State<_NoorMark> createState() => _NoorMarkState();
+}
+
+class _NoorMarkState extends State<_NoorMark>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 2800))
+    ..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+      animation: _controller,
+      builder: (_, __) => Transform.scale(
+          scale: .97 + _controller.value * .06,
+          child: Container(
+              width: widget.size,
+              height: widget.size,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: widget.light
+                          ? const [Color(0xFFFFE5A0), Color(0xFFE8A94D)]
+                          : const [Color(0xFF0A9D91), Color(0xFF155B78)]),
+                  border: Border.all(
+                      color: Colors.white.withValues(alpha: .35), width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                        color: const Color(0xFF0D9B91).withValues(alpha: .25),
+                        blurRadius: 22,
+                        offset: const Offset(0, 8))
+                  ]),
+              child: CustomPaint(
+                  painter: _NoorMarkPainter(
+                      light: widget.light, phase: _controller.value)))));
+}
+
+class _NoorMarkPainter extends CustomPainter {
+  const _NoorMarkPainter({required this.light, required this.phase});
+  final bool light;
+  final double phase;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final s = size.shortestSide;
+    final gold = Paint()..color = const Color(0xFFFFD978);
+    final white = Paint()..color = Colors.white;
+    final soft = Paint()..color = const Color(0xFFBDEFE8);
+
+    final moonCenter = Offset(s * .285, s * .285);
+    final moon = Path()
+      ..addOval(Rect.fromCircle(center: moonCenter, radius: s * .115));
+    final moonCut = Path()
+      ..addOval(Rect.fromCircle(
+          center: Offset(s * .335, s * .245), radius: s * .112));
+    canvas.drawPath(Path.combine(PathOperation.difference, moon, moonCut), gold);
+
+    final starCenter = Offset(s * .755, s * (.235 - phase * .018));
+    final star = Path();
+    for (var i = 0; i < 8; i++) {
+      final angle = -math.pi / 2 + i * math.pi / 4;
+      final radius = i.isEven ? s * .105 : s * .043;
+      final point = Offset(starCenter.dx + math.cos(angle) * radius,
+          starCenter.dy + math.sin(angle) * radius);
+      if (i == 0) {
+        star.moveTo(point.dx, point.dy);
+      } else {
+        star.lineTo(point.dx, point.dy);
+      }
+    }
+    star.close();
+    canvas.drawPath(star, gold);
+
+    final leftPage = Path()
+      ..moveTo(s * .50, s * .57)
+      ..cubicTo(s * .40, s * .48, s * .28, s * .45, s * .19, s * .49)
+      ..lineTo(s * .19, s * .76)
+      ..cubicTo(s * .31, s * .72, s * .42, s * .75, s * .50, s * .83)
+      ..close();
+    final rightPage = Path()
+      ..moveTo(s * .50, s * .57)
+      ..cubicTo(s * .60, s * .48, s * .72, s * .45, s * .81, s * .49)
+      ..lineTo(s * .81, s * .76)
+      ..cubicTo(s * .69, s * .72, s * .58, s * .75, s * .50, s * .83)
+      ..close();
+    canvas.drawPath(leftPage, white);
+    canvas.drawPath(rightPage, soft);
+    canvas.drawLine(Offset(s * .50, s * .57), Offset(s * .50, s * .83),
+        Paint()
+          ..color = const Color(0xFF0D8E87)
+          ..strokeWidth = s * .018
+          ..strokeCap = StrokeCap.round);
+    canvas.drawCircle(Offset(s * .22, s * .34), s * .018, white);
+    canvas.drawCircle(Offset(s * .78, s * .43), s * .014, gold);
+  }
+
+  @override
+  bool shouldRepaint(covariant _NoorMarkPainter oldDelegate) =>
+      oldDelegate.phase != phase || oldDelegate.light != light;
+}
