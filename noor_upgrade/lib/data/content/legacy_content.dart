@@ -169,7 +169,7 @@ class LegacyContentRepository {
       if (source is Map) _first([source['reference'], source['name'], source['url']]),
       _str(map['narrator']).isEmpty ? '' : 'الراوي: ${_str(map['narrator'])}',
       _str(map['book']).isEmpty ? '' : 'الكتاب: ${_str(map['book'])}',
-      map['number'] == null ? '' : 'رقم: ${map['number']}',
+      (map['number'] is num || map['number'] is String) ? 'رقم: ${map['number']}' : '',
       _str(map['grade']).isEmpty ? '' : 'الدرجة: ${_str(map['grade'])}',
       _str(map['reference']).isEmpty ? '' : _str(map['reference']),
     ].where((part) => part.trim().isNotEmpty).toList();
