@@ -204,6 +204,7 @@ class _QuranSurahDetailScreenState extends State<QuranSurahDetailScreen> {
   void initState() {
     super.initState();
     _playerSubscription = _player.playerStateStream.listen((state) {
+      if (mounted) setState(() {});
       if (state.processingState == ProcessingState.completed && _playingAll) {
         _playAyahAt(_currentIndex + 1);
       }
