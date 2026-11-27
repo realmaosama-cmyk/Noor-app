@@ -59,6 +59,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/quran_library_screen.dart" "$PROJECT_DIR/lib/features/home/quran_library_screen.dart"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/quran_recitation_screen.dart" "$PROJECT_DIR/lib/features/home/quran_recitation_screen.dart"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/intro_video_screen.dart" "$PROJECT_DIR/lib/features/home/intro_video_screen.dart"
+          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/level_check_screen.dart" "$PROJECT_DIR/lib/features/home/level_check_screen.dart"
           mkdir -p "$PROJECT_DIR/lib/core/services"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_sound_service.dart" "$PROJECT_DIR/lib/core/services/noor_sound_service.dart"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_voice.dart" "$PROJECT_DIR/lib/core/services/noor_voice.dart"
