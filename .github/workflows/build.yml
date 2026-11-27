@@ -1,5 +1,4 @@
 name: NOOR Android APK Build
-# Validate the full NOOR overlay on every PR update.
 
 on:
   push:
@@ -24,7 +23,7 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Extract latest NOOR source archive
+      - name: Extract latest NOOR source archive and apply full upgrade
         shell: bash
         run: |
           set -euo pipefail
@@ -35,9 +34,10 @@ jobs:
           test -n "$PUBSPEC"
           PROJECT_DIR="$(dirname "$PUBSPEC")"
           OVERLAY_B64="$GITHUB_WORKSPACE/.github/noor-overlay.tar.b64"
-          if [ -f "$OVERLAY_B64" ] && [ ! -f "$PROJECT_DIR/lib/features/home/feature_hub_screen.dart" ]; then
-            base64 --decode "$OVERLAY_B64" | tar -xf - -C "$PROJECT_DIR"
-          fi
+          test -f "$OVERLAY_B64"
+          base64 --decode "$OVERLAY_B64" | tar -xf - -C "$PROJECT_DIR"
+          test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
+          test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
           mkdir -p "$RUNNER_TEMP/noor-workspace"
           cp -a "$PROJECT_DIR"/. "$RUNNER_TEMP/noor-workspace/"
           echo "NOOR_PROJECT_DIR=$RUNNER_TEMP/noor-workspace" >> "$GITHUB_ENV"
@@ -68,10 +68,34 @@ jobs:
           if [ ! -d android ]; then
             flutter create --platforms=android --org com.noor --project-name noor .
           fi
-          MANIFEST="android/app/src/main/AndroidManifest.xml"
-          if [ -f "$MANIFEST" ]; then
-            sed -i 's/android:label="[^"]*"/android:label="نور | NOOR"/' "$MANIFEST"
-          fi
+          chmod +x tool/configure_android_branding.sh
+          ./tool/configure_android_branding.sh
+
+      - name: Verify signing secrets and configure release signing
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$KEYSTORE_BASE64" || { echo "Missing KEYSTORE_BASE64"; exit 1; }
+          test -n "$KEYSTORE_PASSWORD" || { echo "Missing KEYSTORE_PASSWORD"; exit 1; }
+          test -n "$KEY_ALIAS" || { echo "Missing KEY_ALIAS"; exit 1; }
+          test -n "$KEY_PASSWORD" || { echo "Missing KEY_PASSWORD"; exit 1; }
+          SIGNING_DIR="$RUNNER_TEMP/noor-signing"
+          mkdir -p "$SIGNING_DIR"
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$SIGNING_DIR/noor-release.jks"
+          test -s "$SIGNING_DIR/noor-release.jks"
+          {
+            printf 'storeFile=%s\n' "$SIGNING_DIR/noor-release.jks"
+            printf 'storePassword=%s\n' "$KEYSTORE_PASSWORD"
+            printf 'keyAlias=%s\n' "$KEY_ALIAS"
+            printf 'keyPassword=%s\n' "$KEY_PASSWORD"
+          } > android/key.properties
+          python3 tool/configure_android_signing.py "$PWD"
 
       - name: Verify NOOR project tests
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
@@ -93,15 +117,28 @@ jobs:
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter test
 
-      - name: Build release APK only
+      - name: Build signed release APK only
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter build apk --release
+
+      - name: Verify APK signature
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="build/app/outputs/flutter-apk/app-release.apk"
+          test -s "$APK"
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
+          test -n "$APKSIGNER"
+          "$APKSIGNER" verify --verbose "$APK"
+          rm -f android/key.properties
 
       - name: Package normalized source archive
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         shell: bash
         run: |
           set -euo pipefail
+          test ! -f android/key.properties
           mkdir -p "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main"
           cp -a . "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/"
           rm -rf "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/build" \
@@ -109,6 +146,7 @@ jobs:
             "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/.packages" \
             "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/android/.gradle" \
             "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/android/local.properties" \
+            "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/android/key.properties" \
             "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/NOOR_Source.zip"
           (cd "$RUNNER_TEMP/noor-package" && zip -qr "$RUNNER_TEMP/NOOR_Source.zip" Nour-and-fedaa-main)
 
@@ -122,11 +160,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add NOOR_Source.zip
           if ! git diff --cached --quiet; then
-            git commit -m "chore: refresh NOOR source archive after APK validation"
+            git commit -m "chore: refresh NOOR source archive after signed APK validation"
             git push origin "HEAD:${GITHUB_HEAD_REF}"
           fi
 
-      - name: Upload APK release and source archive
+      - name: Upload signed APK and source archive
         uses: actions/upload-artifact@v7
         with:
           name: NOOR-APK-Release
