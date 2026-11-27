@@ -96,6 +96,10 @@ void main() {
       );
 
       expect(items.single.body, 'النص الكامل للحديث');
+      expect(items.single.source, contains('الراوي'));
+      expect(items.single.source, contains('صحيح البخاري'));
+      expect(items.single.source, contains('رقم: 8'));
+      expect(items.single.source, contains('صحيح'));
     });
   });
 }
