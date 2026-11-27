@@ -19,16 +19,17 @@ if "learning_domain_screen.dart" not in r:
     r = r.replace("import '../../features/home/letter_builder_game_screen.dart';",
       "import '../../features/home/letter_builder_game_screen.dart';\nimport '../../features/home/learning_domain_screen.dart';\nimport '../../features/home/quran_library_screen.dart';")
 route_anchor = "path: '/section/:id'"
+at = r.find(route_anchor)
+route_start = r.rfind("GoRoute(", 0, at)
+if at < 0 or route_start < 0: raise SystemExit("Could not locate route insertion point")
 if "LearningDomainScreen(" not in r:
-    at = r.find(route_anchor)
-    if at < 0: raise SystemExit("Could not locate route insertion point")
-    r = r[:at] + "      GoRoute(path: '/domain/:id', builder: (_, state) => LearningDomainScreen(domainId: state.pathParameters['id']!)),\n" + r[at:]
+    r = r[:route_start] + "      GoRoute(path: '/domain/:id', builder: (_, state) => LearningDomainScreen(domainId: state.pathParameters['id']!)),\\n      " + r[route_start:]
+    route_start = r.rfind("GoRoute(", 0, r.find(route_anchor))
 if "QuranLibraryScreen(" not in r:
-    at = r.find(route_anchor)
-    r = r[:at] + "      GoRoute(path: '/quran-library', builder: (_, __) => const QuranLibraryScreen()),\n" + r[at:]
+    r = r[:route_start] + "      GoRoute(path: '/quran-library', builder: (_, __) => const QuranLibraryScreen()),\\n      " + r[route_start:]
+    route_start = r.rfind("GoRoute(", 0, r.find(route_anchor))
 if "QuranHubScreen(" not in r:
-    at = r.find(route_anchor)
-    r = r[:at] + "      GoRoute(path: '/quran-hub', builder: (_, __) => const QuranHubScreen()),\n" + r[at:]
+    r = r[:route_start] + "      GoRoute(path: '/quran-hub', builder: (_, __) => const QuranHubScreen()),\\n      " + r[route_start:]
 router.write_text(r, encoding="utf-8")
 
 home = root / "lib/features/home/home_screen.dart"
