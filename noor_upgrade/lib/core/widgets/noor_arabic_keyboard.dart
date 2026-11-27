@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// In-app Arabic keyboard used for child profile names.
 class NoorArabicKeyboard extends StatefulWidget {
