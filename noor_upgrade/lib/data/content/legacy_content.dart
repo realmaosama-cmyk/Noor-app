@@ -15,26 +15,27 @@ class LegacyContentRepository {
       .expand((w) => ['week${w}_lessons.json', 'week${w}_early_lessons.json'])
       .toList(growable: false);
   static final Map<String, List<String>> _files = {
-    'quran': ['quran_lessons.json', 'section_ayat_lessons.json', 'quran_surahs.json'],
-    'prayer': ['prayer_hadith.json', 'lessons/a_salah_five.json',
+    'quran': ['noor_quran.json', 'quran_lessons.json', 'section_ayat_lessons.json', 'quran_surahs.json'],
+    'prayer': ['noor_prayer.json', 'prayer_hadith.json', 'lessons/a_salah_five.json',
       'lessons/a_salah_rakat.json', ..._weeks],
-    'adhkar': ['adhkar_hadith.json', 'hadith_lessons.json',
+    'adhkar': ['noor_adhkar.json', 'adhkar_hadith.json', 'hadith_lessons.json',
       'lessons/t_adab_after_meal.json', 'lessons/t_adab_food.json',
       'lessons/t_adab_greet.json', 'lessons/t_adab_sleep.json',
       'lessons/t_adab_sneeze.json'],
-    'akhlaq': ['akhlaq_hadith.json', 'hadith_lessons.json',
+    'akhlaq': ['noor_akhlaq.json', 'akhlaq_hadith.json', 'hadith_lessons.json',
       'lessons/t_akhlaq_kind_word.json', 'lessons/t_akhlaq_share.json',
       'lessons/t_akhlaq_thanks.json', 'lessons/t_akhlaq_tidy.json'],
-    'seerah': ['seerah_hadith.json', 'hadith_lessons.json'],
-    'figures': ['figures_hadith.json', 'hadith_lessons.json'],
-    'prophets': ['prophets_lessons.json', 'prophets_ayat.json'],
+    'seerah': ['noor_seerah.json', 'seerah_hadith.json', 'hadith_lessons.json'],
+    'figures': ['noor_figures.json', 'figures_hadith.json', 'hadith_lessons.json'],
+    'prophets': ['noor_prophets.json', 'prophets_lessons.json', 'prophets_ayat.json'],
     'learn': ['learn_lessons.json', 'nour_more_lessons.json', ..._weeks,
       'lessons/a_arabic_letters_1.json', 'lessons/a_arabic_letters_2.json',
       'lessons/a_arabic_letters_3.json', 'lessons/a_arabic_letters_4.json',
       'lessons/a_arabic_letters_5.json', 'lessons/a_arabic_letters_6.json',
       'lessons/a_arabic_letters_7.json'],
     'challenges': ['games.json'],
-    'games': ['games.json'],
+    'games': ['noor_games.json', 'games.json'],
+    'achievements': ['noor_achievements.json'],
   };
 
   static Future<List<LegacyContentItem>> loadForSection(String sectionId, int age) async {
