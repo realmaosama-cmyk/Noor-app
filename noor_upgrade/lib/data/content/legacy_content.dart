@@ -196,7 +196,7 @@ class LegacyContentRepository {
     final body = _first([
       map['hadithText'], map['hadith'], map['matn'], map['verseText'], map['arabicText'], map['arabic'], map['verse'],
       map['content'], map['text'], map['body'], map['kidMeaning'],
-      map['goal'], map['intro'],
+      map['goal'], map['objective'], map['learned'], map['toddlerSay'], map['say'], map['intro'],
     ]);
     final stepText = steps.join(' • ');
     final finalBody = body.isNotEmpty ? body : stepText.isNotEmpty ? stepText : _str(map['summary']);
@@ -239,7 +239,10 @@ class LegacyContentRepository {
   }
 
   static String _summary(Map<String, dynamic> map, String body) {
-    final summary = _first([map['summary'], map['kidMeaning'], map['intro'], map['goal']]);
+    final summary = _first([
+      map['summary'], map['kidMeaning'], map['intro'], map['goal'],
+      map['objective'], map['learned'], map['toddlerSay'],
+    ]);
     if (summary.isNotEmpty) return summary;
     return body.length > 120 ? '${body.substring(0, 117)}…' : body;
   }
