@@ -155,7 +155,7 @@ class LegacyContentRepository {
     }
 
     final body = _first([
-      map['hadithText'], map['hadith'], map['matn'], map['verseText'],
+      map['hadithText'], map['hadith'], map['matn'], map['verseText'], map['arabicText'], map['arabic'], map['verse'],
       map['content'], map['text'], map['body'], map['kidMeaning'],
       map['goal'], map['intro'], map['summary'],
     ]);
@@ -164,16 +164,23 @@ class LegacyContentRepository {
     if (finalBody.isEmpty && questions.isEmpty) return null;
 
     final source = map['source'];
-    final sourceText = source is Map
-        ? _first([source['reference'], source['name'], source['book'], source['url']])
-        : _first([source, map['book'], map['reference'], map['grade']]);
+    final sourceParts = <String>[
+      if (source is String && source.trim().isNotEmpty) source.trim(),
+      if (source is Map) _first([source['reference'], source['name'], source['url']]),
+      _str(map['narrator']).isEmpty ? '' : 'الراوي: ${_str(map['narrator'])}',
+      _str(map['book']).isEmpty ? '' : 'الكتاب: ${_str(map['book'])}',
+      map['number'] == null ? '' : 'رقم: ${map['number']}',
+      _str(map['grade']).isEmpty ? '' : 'الدرجة: ${_str(map['grade'])}',
+      _str(map['reference']).isEmpty ? '' : _str(map['reference']),
+    ].where((part) => part.trim().isNotEmpty).toList();
+    final sourceText = sourceParts.toSet().join(' • ');
     final id = _str(map['id']);
     final weekMatch = RegExp(r'week(\d+)').firstMatch(file);
     return LegacyContentItem(
       id: id.isEmpty ? '$file:$title' : id,
       title: title,
       emoji: _str(map['emoji']).isEmpty ? _str(map['icon']).isEmpty ? '✨' : _str(map['icon']) : _str(map['emoji']),
-      summary: _first([map['summary'], map['kidMeaning'], map['intro'], map['goal'], finalBody]),
+      summary: _summary(map, finalBody),
       body: finalBody,
       source: sourceText,
       minAge: _num(map['minAge'], 3),
@@ -184,6 +191,12 @@ class LegacyContentRepository {
       difficulty: _str(map['difficulty']),
       category: _str(map['category']),
     );
+  }
+
+  static String _summary(Map<String, dynamic> map, String body) {
+    final summary = _first([map['summary'], map['kidMeaning'], map['intro'], map['goal']]);
+    if (summary.isNotEmpty) return summary;
+    return body.length > 120 ? '${body.substring(0, 117)}…' : body;
   }
 
   static String _normalize(String value) => value
