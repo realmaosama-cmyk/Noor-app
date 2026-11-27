@@ -197,23 +197,34 @@ class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
           children: [
             Text('$prompt', textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.w800, height: 1.5)),
-            RadioGroup<int>(
-              groupValue: _selected,
-              onChanged: (value) {
-                if (!answered) setState(() => _selected = value);
-              },
-              child: Column(
-                children: [
-                  for (var index = 0; index < options.length; index++)
-                    RadioListTile<int>(
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      value: index,
-                      title: Text(options[index], textAlign: TextAlign.right),
-                    ),
-                ],
+            for (var index = 0; index < options.length; index++)
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: answered ? null : () => setState(() => _selected = index),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _selected == index
+                            ? Icons.radio_button_checked_rounded
+                            : Icons.radio_button_off_rounded,
+                        color: _selected == index
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.grey,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          options[index],
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(height: 1.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
             if (answered)
               Text(
                 isCorrect
