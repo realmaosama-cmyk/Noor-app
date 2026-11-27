@@ -18,6 +18,7 @@ from pathlib import Path
 TEXT_URL = "https://tanzil.net/pub/download/index.php"
 META_URL = "https://tanzil.net/res/text/metadata/quran-data.xml"
 BASMALA = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"
+EXPECTED_UPSTREAM_SHA256 = "bf4f57b968d03f4131c070b1e285da9be0e0a108a21c910e872801ca273312c8"
 HEADERS = {"User-Agent": "NOOR-Quran-Builder/1.0 (+https://tanzil.net)"}
 
 
@@ -147,6 +148,11 @@ def main() -> None:
         raise ValueError(f"Quran integrity failure: {len(surahs)} surahs / {total} ayahs")
 
     digest = hashlib.sha256(raw_text).hexdigest()
+    if digest != EXPECTED_UPSTREAM_SHA256:
+        raise ValueError(
+            "Tanzil upstream text changed. Stop the build and review the new "
+            f"publisher checksum before accepting it: {digest}"
+        )
     output = {
         "schema": 1,
         "source": {
