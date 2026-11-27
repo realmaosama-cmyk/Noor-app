@@ -124,6 +124,40 @@ for path in ALL_JSON:
             errors.append(f"{label}: duplicate title for same age range")
         title_keys.add(title_key)
 
+
+# The Quran is a strict integrity gate, not an optional legacy pack.
+quran_path = ROOT / "quran_surahs.json"
+if not quran_path.is_file():
+    errors.append("quran_surahs.json: missing complete Quran dataset")
+else:
+    try:
+        quran = json.loads(quran_path.read_text(encoding="utf-8"))
+        surahs = quran.get("surahs", [])
+        if len(surahs) != 114:
+            errors.append(f"quran_surahs.json: expected 114 surahs, found {len(surahs)}")
+        if [s.get("surahNumber") for s in surahs] != list(range(1, 115)):
+            errors.append("quran_surahs.json: surah numbers must be sequential 1..114")
+        ayah_total = 0
+        for surah in surahs:
+            number = surah.get("surahNumber")
+            ayahs = surah.get("ayahs", [])
+            expected = surah.get("ayahCount")
+            if not isinstance(ayahs, list) or expected != len(ayahs):
+                errors.append(f"quran_surahs.json: invalid ayah count for surah {number}")
+                continue
+            if [a.get("number") for a in ayahs] != list(range(1, len(ayahs) + 1)):
+                errors.append(f"quran_surahs.json: non-sequential ayah numbers in surah {number}")
+            if any(not isinstance(a.get("text"), str) or not a["text"].strip() for a in ayahs):
+                errors.append(f"quran_surahs.json: empty ayah text in surah {number}")
+            ayah_total += len(ayahs)
+        if ayah_total != 6236:
+            errors.append(f"quran_surahs.json: expected 6,236 ayahs, found {ayah_total}")
+        source = quran.get("source", {})
+        if source.get("name") != "Tanzil Quran Text (Uthmani)" or not re.fullmatch(r"[0-9a-f]{64}", source.get("upstream_sha256", "")):
+            errors.append("quran_surahs.json: missing Tanzil provenance or upstream SHA-256")
+    except Exception as exc:
+        errors.append(f"quran_surahs.json: invalid dataset: {exc}")
+
 if errors:
     print("ERRORS:\n" + "\n".join(errors))
     print(f"Scanned {len(ALL_JSON)} JSON files; {legacy_records} legacy records; {curated_count} curated lessons.")
