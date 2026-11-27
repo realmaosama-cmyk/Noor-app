@@ -236,7 +236,13 @@ for filename in ("atfal.json", "nashia.json", "murahiqun.json"):
             answer = question.get("answer")
             if not isinstance(question.get("text"), str) or not question["text"].strip():
                 errors.append(f"levelcheck/{filename} question {index}: missing prompt")
-            if not isinstance(options, list) or len(options) < 2 or type(answer) is not int or not 0 <= answer < len(options):
+            if (
+                not isinstance(options, list)
+                or len(options) < 2
+                or any(not isinstance(option, str) or not option.strip() for option in options)
+                or type(answer) is not int
+                or not 0 <= answer < len(options)
+            ):
                 errors.append(f"levelcheck/{filename} question {index}: invalid options or answer index")
             if not isinstance(question.get("source"), str) or not question["source"].strip():
                 errors.append(f"levelcheck/{filename} question {index}: missing source note")
