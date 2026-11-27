@@ -1,4 +1,5 @@
 import 'package:just_audio/just_audio.dart';
+import 'package:audio_session/audio_session.dart';
 
 /// Local sound effects and the original Nour & Fedaa song.
 class NoorSoundService {
@@ -41,6 +42,8 @@ class NoorSoundService {
   static Future<void> playSong() async {
     if (!_enabled) return;
     try {
+      final session = await AudioSession.instance;
+      await session.configure(AudioSessionConfiguration.music());
       await _music.stop();
       await _music.setLoopMode(LoopMode.off);
       await _music.setAsset(
@@ -55,6 +58,8 @@ class NoorSoundService {
   static Future<void> playIntroScore({bool loop = true}) async {
     if (!_enabled) return;
     try {
+      final session = await AudioSession.instance;
+      await session.configure(AudioSessionConfiguration.music());
       await _music.stop();
       await _music.setLoopMode(loop ? LoopMode.one : LoopMode.off);
       await _music.setAsset(

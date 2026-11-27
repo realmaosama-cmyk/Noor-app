@@ -92,6 +92,7 @@ def ensure_dependency(name: str, version: str) -> None:
 ensure_dependency("video_player", "^2.9.1")
 ensure_dependency("just_audio", "^0.9.46")
 ensure_dependency("flutter_tts", "^4.2.3")
+ensure_dependency("audio_session", "^0.1.25")
 write("pubspec.yaml", pubspec)
 
 # Replace the old launcher artwork only if it is still present.

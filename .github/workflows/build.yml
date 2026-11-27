@@ -63,10 +63,13 @@ jobs:
           mkdir -p "$PROJECT_DIR/lib/core/services"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_sound_service.dart" "$PROJECT_DIR/lib/core/services/noor_sound_service.dart"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_voice.dart" "$PROJECT_DIR/lib/core/services/noor_voice.dart"
+          mkdir -p "$PROJECT_DIR/lib/core/widgets"
+          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/widgets/noor_arabic_keyboard.dart" "$PROJECT_DIR/lib/core/widgets/noor_arabic_keyboard.dart"
           mkdir -p "$PROJECT_DIR/test"
           cp -a "$GITHUB_WORKSPACE/noor_upgrade/test/." "$PROJECT_DIR/test/"
           python3 -m py_compile "$GITHUB_WORKSPACE"/.github/scripts/*.py "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py"
           python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
+          python3 "$GITHUB_WORKSPACE/.github/scripts/apply_noor_keyboard.py" "$PROJECT_DIR"
           test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
           test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
           mkdir -p "$RUNNER_TEMP/noor-workspace"
@@ -191,6 +194,19 @@ jobs:
         run: |
           if [ -n "${{ env.NOOR_PROJECT_DIR }}" ]; then rm -f "${{ env.NOOR_PROJECT_DIR }}/android/key.properties"; fi
           rm -rf "$RUNNER_TEMP/noor-signing"
+
+      - name: Package complete Flutter project into one source ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 "$GITHUB_WORKSPACE/.github/scripts/package_noor_source.py" "$NOOR_PROJECT_DIR" "$GITHUB_WORKSPACE/dist/NOOR_Source.zip"
+
+      - name: Upload single-file NOOR source package
+        uses: actions/upload-artifact@v7
+        with:
+          name: NOOR-Source-Package
+          if-no-files-found: error
+          path: dist/NOOR_Source.zip
 
       - name: Upload APK build result
         uses: actions/upload-artifact@v7

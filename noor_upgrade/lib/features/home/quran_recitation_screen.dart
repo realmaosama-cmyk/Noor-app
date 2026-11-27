@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/widgets/noor_brand.dart';
@@ -31,8 +32,26 @@ class _QuranRecitationScreenState extends State<QuranRecitationScreen> {
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList()
       ..sort((a, b) => (a['surahNumber'] as int).compareTo(b['surahNumber'] as int));
-    final total = values.fold<int>(0, (sum, item) => sum + (item['ayahCount'] as int));
-    if (values.length != 114 || total != 6236) {
+    final surahNumbers = values.map((item) => item['surahNumber'] as int).toSet();
+    var total = 0;
+    for (final surah in values) {
+      final ayahs = surah['ayahs'] as List;
+      final declaredCount = surah['ayahCount'] as int;
+      if (ayahs.length != declaredCount) {
+        throw StateError('عدد آيات السورة ${surah['surahNumber']} غير متطابق');
+      }
+      for (var index = 0; index < ayahs.length; index++) {
+        final ayah = Map<String, dynamic>.from(ayahs[index] as Map);
+        if (ayah['number'] != index + 1) {
+          throw StateError('ترتيب آيات غير صحيح في السورة ${surah['surahNumber']}');
+        }
+      }
+      total += ayahs.length;
+    }
+    if (values.length != 114 ||
+        surahNumbers.length != 114 ||
+        !List<int>.generate(114, (index) => index + 1).every(surahNumbers.contains) ||
+        total != 6236) {
       throw StateError('فهرس القرآن غير مكتمل: ${values.length} سورة / $total آية');
     }
     return values;
@@ -69,6 +88,8 @@ class _QuranRecitationScreenState extends State<QuranRecitationScreen> {
       _error = null;
     });
     try {
+      final audioSession = await AudioSession.instance;
+      await audioSession.configure(AudioSessionConfiguration.speech());
       await _player.setUrl(url);
       if (!mounted) return;
       setState(() => _loading = false);
