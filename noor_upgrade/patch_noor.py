@@ -62,7 +62,14 @@ for package, version in (
 ):
     if re.search(rf'(?m)^  {re.escape(package)}:', pubspec) is None:
         pubspec, count = re.subn(
-            r'(?m)^dependencies:[ \\t]*
+            r'(?m)^dependencies:[ \t]*$',
+            f'dependencies:\n  {package}: {version}',
+            pubspec,
+            count=1,
+        )
+        if count != 1:
+            raise SystemExit(f'Could not add {package} to pubspec dependencies')
+pubspec_path.write_text(pubspec, encoding='utf-8')
 
 branding_path = root / 'tool/configure_android_branding.sh'
 branding = branding_path.read_text(encoding='utf-8')
