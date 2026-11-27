@@ -29,6 +29,7 @@ jobs:
           set -euo pipefail
           test -f "$GITHUB_WORKSPACE/NOOR_Source.zip"
           mkdir -p "$RUNNER_TEMP/noor-extracted"
+          unzip -tq "$GITHUB_WORKSPACE/NOOR_Source.zip" >/dev/null
           unzip -q "$GITHUB_WORKSPACE/NOOR_Source.zip" -d "$RUNNER_TEMP/noor-extracted"
           PUBSPEC="$(find "$RUNNER_TEMP/noor-extracted" -name pubspec.yaml -print -quit)"
           test -n "$PUBSPEC"
@@ -63,6 +64,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_voice.dart" "$PROJECT_DIR/lib/core/services/noor_voice.dart"
           mkdir -p "$PROJECT_DIR/test"
           cp -a "$GITHUB_WORKSPACE/noor_upgrade/test/." "$PROJECT_DIR/test/"
+          python3 -m py_compile "$GITHUB_WORKSPACE"/.github/scripts/*.py "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py"
           python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
           test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
           test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
