@@ -33,8 +33,8 @@ class LegacyContentRepository {
       'lessons/a_arabic_letters_3.json', 'lessons/a_arabic_letters_4.json',
       'lessons/a_arabic_letters_5.json', 'lessons/a_arabic_letters_6.json',
       'lessons/a_arabic_letters_7.json'],
-    'challenges': ['games.json'],
-    'games': ['games.json'],
+    'challenges': ['games.json', 'games_pack.json'],
+    'games': ['games.json', 'games_pack.json'],
   };
 
   static Future<List<LegacyContentItem>> loadForSection(String sectionId, int age) async {
@@ -59,26 +59,33 @@ class LegacyContentRepository {
         // Optional legacy content must not prevent the app from opening.
       }
     }
-    final items = result.values.toList()..sort((a, b) => a.title.compareTo(b.title));
-    return items.take(120).toList(growable: false);
+    final items = result.values.toList()
+      ..sort((a, b) => a.title.compareTo(b.title));
+    // Never truncate imported curriculum: the caller can paginate or filter it.
+    return items;
   }
 
   static LegacyContentItem? _parse(Map<String, dynamic> map, String file) {
-    final title = _str(map['title']);
+    final title = _first([map['title'], map['name']]);
     if (title.isEmpty) return null;
     final steps = map['steps'];
     final stepText = steps is List
         ? steps.whereType<Map<dynamic, dynamic>>().map((s) => _str(s['text'])).where((s) => s.isNotEmpty).join(' • ')
         : '';
-    final body = _first([map['body'], map['kidMeaning'], map['text'], map['goal'], stepText, map['intro'], map['summary']]);
+    final ayahs = map['ayahs'];
+    final ayahText = ayahs is List
+        ? ayahs.map((a) => a is Map ? _str(a['text']) : _str(a)).where((s) => s.isNotEmpty).join('\n')
+        : '';
+    final body = _first([map['body'], map['kidMeaning'], map['text'], map['goal'], stepText, ayahText, map['intro'], map['summary']]);
     if (body.isEmpty) return null;
     final source = map['source'];
     final sourceText = source is Map<dynamic, dynamic>
         ? _first([source['reference'], source['name']])
         : _first([source, map['book'], map['grade'], map['number'] == null ? '' : 'رقم ${map['number']}']);
     final id = _str(map['id']);
+    final number = map['surahNumber'] ?? map['n'];
     return LegacyContentItem(
-      id.isEmpty ? '$file:$title' : id,
+      id.isEmpty ? (number == null ? '$file:$title' : 'surah_$number') : id,
       title,
       _str(map['emoji']).isEmpty ? '✨' : _str(map['emoji']),
       _first([map['summary'], map['kidMeaning'], map['intro'], map['goal'], body]),
