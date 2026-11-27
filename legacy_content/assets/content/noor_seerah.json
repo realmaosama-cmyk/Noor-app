@@ -15,7 +15,11 @@
         "اذكر خلقاً جميلاً تعلمته.",
         "طبق الرحمة مع إنسان أو حيوان."
       ],
-      "source": "السيرة النبوية؛ راجع كتاباً موثوقاً مبسطاً"
+      "source": "السيرة النبوية؛ راجع كتاباً موثوقاً مبسطاً",
+      "category": "seerah",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ns_002",
@@ -30,7 +34,11 @@
         "اذكر كيف ساعد الأنصار المهاجرين.",
         "استخرج قيمة التعاون من القصة."
       ],
-      "source": "السيرة النبوية: الهجرة إلى المدينة"
+      "source": "السيرة النبوية: الهجرة إلى المدينة",
+      "category": "seerah",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ns_003",
@@ -45,7 +53,11 @@
         "اكتب ثلاثة بنود أو نتائج كما وردت بالمصدر.",
         "ناقش قيمة الوفاء بالعهد وضبط النفس."
       ],
-      "source": "السيرة النبوية: صلح الحديبية"
+      "source": "السيرة النبوية: صلح الحديبية",
+      "category": "seerah",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ns_004",
@@ -60,7 +72,11 @@
         "اذكر موقفاً تقول فيه الحقيقة.",
         "اشكر نفسك على الصدق والمحاولة."
       ],
-      "source": "السيرة النبوية؛ تحقق من الرواية قبل استخدامها"
+      "source": "السيرة النبوية؛ تحقق من الرواية قبل استخدامها",
+      "category": "seerah",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ns_005",
@@ -75,7 +91,11 @@
         "اذكر قيمة إيجابية تعلمتها.",
         "ناقش كيف نطبق العفو مع حفظ الحقوق."
       ],
-      "source": "السيرة النبوية: فتح مكة"
+      "source": "السيرة النبوية: فتح مكة",
+      "category": "seerah",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ns_006",
@@ -90,7 +110,11 @@
         "سجل المصدر والصفحة إن وجدت.",
         "اكتب حقيقة موثقة واستنتاجاً منفصلاً."
       ],
-      "source": "منهج مبسط للتحقق التاريخي"
+      "source": "منهج مبسط للتحقق التاريخي",
+      "category": "seerah",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     }
   ]
 }
