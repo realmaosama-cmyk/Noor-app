@@ -16,7 +16,7 @@ if "path: '/legacy-content'" not in router:
     anchor = "routes: ["
     if anchor not in router:
         raise SystemExit('Could not find the app route list')
-    router = router.replace(anchor, anchor + "\\n      " + route, 1)
+    router = router.replace(anchor, anchor + "\n      " + route, 1)
 router_path.write_text(router, encoding='utf-8')
 
 home_path = root / 'lib/features/home/home_screen.dart'
