@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:material_ui/material_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/widgets/noor_brand.dart';
+import '../../core/services/noor_voice.dart';
 import '../../data/content/legacy_content.dart';
 import '../../data/providers.dart';
 import 'quran_library_screen.dart';
@@ -18,7 +22,8 @@ class LegacyContentScreen extends ConsumerWidget {
     ('figures', 'الصحابة والشخصيات', '⭐'),
     ('prophets', 'قصص الأنبياء', '🌿'),
     ('learn', 'التعلم والمناهج الأسبوعية', '🎨'),
-    ('games', 'الألعاب والتحديات', '🎮'),
+    ('games', 'ألعاب نور التعليمية', '🎮'),
+    ('challenges', 'تحديات وألعاب المكتبة الأصلية', '🧩'),
     ('achievements', 'الإنجازات والشارات', '🏅'),
   ];
 
@@ -55,6 +60,17 @@ class LegacyContentScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+                Card(
+                  child: ListTile(
+                    leading: const CircleAvatar(child: Icon(Icons.volume_up_rounded)),
+                    title: const Text('مكتبة الصوتيات والعبارات'),
+                    subtitle: const Text('الأذكار والأحاديث وعبارات نور وفداء بصوت عربي'),
+                    trailing: const Icon(Icons.chevron_left_rounded),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(builder: (_) => const VoicePhraseLibraryScreen()),
+                    ),
+                  ),
+                ),
                 for (final section in _sections)
                   if (section.$1 == 'quran')
                     Card(
@@ -101,6 +117,24 @@ class LegacyContentScreen extends ConsumerWidget {
                                   Align(
                                     alignment: AlignmentDirectional.centerEnd,
                                     child: Text(item.body, style: const TextStyle(fontSize: 16, height: 1.7)),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional.centerEnd,
+                                    child: TextButton.icon(
+                                      onPressed: () async {
+                                        try {
+                                          await NoorVoice.speak('${item.title}. ${item.body}');
+                                        } catch (_) {
+                                          if (context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(content: Text('تعذر تشغيل الصوت العربي على هذا الجهاز')),
+                                            );
+                                          }
+                                        }
+                                      },
+                                      icon: const Icon(Icons.volume_up_rounded),
+                                      label: const Text('استمع للمادة'),
+                                    ),
                                   ),
                                   if (!item.contentVerified)
                                     Container(
@@ -274,6 +308,164 @@ class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class VoicePhraseLibraryScreen extends StatefulWidget {
+  const VoicePhraseLibraryScreen({super.key});
+
+  @override
+  State<VoicePhraseLibraryScreen> createState() => _VoicePhraseLibraryScreenState();
+}
+
+class _VoicePhraseLibraryScreenState extends State<VoicePhraseLibraryScreen> {
+  late final Future<List<Map<String, dynamic>>> _groupsFuture = _loadGroups();
+  String _selectedGroup = 'essential';
+  String _query = '';
+
+  Future<List<Map<String, dynamic>>> _loadGroups() async {
+    final raw = await rootBundle.loadString('assets/content/legacy/voice_phrases.json');
+    final decoded = jsonDecode(raw) as Map<String, dynamic>;
+    return (decoded['groups'] as List)
+        .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList(growable: false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('مكتبة الصوتيات'),
+        actions: [
+          IconButton(
+            tooltip: 'إيقاف الصوت',
+            onPressed: NoorVoice.stop,
+            icon: const Icon(Icons.stop_circle_outlined),
+          ),
+        ],
+      ),
+      body: NoorPageBackground(
+        asset: 'assets/branding/noor-bg-ocean.webp',
+        child: FutureBuilder<List<Map<String, dynamic>>>(
+          future: _groupsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('تعذر تحميل مكتبة الصوتيات'));
+            }
+            final groups = snapshot.data!;
+            final selected = groups.firstWhere(
+              (group) => group['id'] == _selectedGroup,
+              orElse: () => groups.first,
+            );
+            final phrases = (selected['phrases'] as List)
+                .whereType<Map>()
+                .map((item) => Map<String, dynamic>.from(item))
+                .where((phrase) {
+                  final text = (phrase['text'] ?? '').toString();
+                  final title = (phrase['title'] ?? '').toString();
+                  final source = (phrase['source'] ?? '').toString();
+                  final query = _query.trim();
+                  return query.isEmpty ||
+                      text.contains(query) ||
+                      title.contains(query) ||
+                      source.contains(query);
+                })
+                .toList(growable: false);
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: DropdownButtonFormField<String>(
+                    value: selected['id'] as String,
+                    decoration: const InputDecoration(
+                      labelText: 'مجموعة العبارات',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: [
+                      for (final group in groups)
+                        DropdownMenuItem<String>(
+                          value: group['id'] as String,
+                          child: Text('${group['title']} • ${(group['phrases'] as List).length}'),
+                        ),
+                    ],
+                    onChanged: (value) {
+                      if (value != null) setState(() => _selectedGroup = value);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TextField(
+                    textDirection: TextDirection.rtl,
+                    onChanged: (value) => setState(() => _query = value),
+                    decoration: InputDecoration(
+                      hintText: 'ابحث في العبارات والأحاديث',
+                      prefixIcon: const Icon(Icons.search_rounded),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surface,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text('${phrases.length} عبارة'),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 20),
+                    itemCount: phrases.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 6),
+                    itemBuilder: (context, index) {
+                      final phrase = phrases[index];
+                      final text = (phrase['text'] ?? '').toString();
+                      final title = (phrase['title'] ?? text).toString();
+                      final source = (phrase['source'] ?? phrase['narrator'] ?? '').toString();
+                      return Card(
+                        child: ListTile(
+                          title: Text(title, textDirection: TextDirection.rtl),
+                          subtitle: Text(
+                            source.isEmpty || title == text ? text : '$text\n$source',
+                            textDirection: TextDirection.rtl,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: IconButton.filledTonal(
+                            tooltip: 'استمع',
+                            onPressed: text.isEmpty ? null : () async {
+                              try {
+                                await NoorVoice.speak(text);
+                              } catch (_) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('الصوت العربي غير متاح حاليًا')),
+                                  );
+                                }
+                              }
+                            },
+                            icon: const Icon(Icons.volume_up_rounded),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
