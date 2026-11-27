@@ -42,10 +42,11 @@ jobs:
           mkdir -p "$PROJECT_DIR/assets/content/legacy" "$PROJECT_DIR/lib/data/content"
           python3 "$GITHUB_WORKSPACE/.github/scripts/fetch_full_quran.py" "$GITHUB_WORKSPACE/legacy_content/assets/content"
           python3 "$GITHUB_WORKSPACE/.github/scripts/check_quran_audio.py"
+          python3 "$GITHUB_WORKSPACE/.github/scripts/fetch_legacy_media.py"
           # Persist the verified full Quran in the repository, not only in the APK workspace.
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add legacy_content/assets/content/quran_surahs.json legacy_content/assets/content/QURAN_SOURCE_NOTICE.json
+          git add legacy_content/assets/content/quran_surahs.json legacy_content/assets/content/QURAN_SOURCE_NOTICE.json legacy_content/assets/content/media
           if ! git diff --cached --quiet; then
             git commit -m "Import complete Tanzil Uthmani Quran"
             git push origin "HEAD:${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
