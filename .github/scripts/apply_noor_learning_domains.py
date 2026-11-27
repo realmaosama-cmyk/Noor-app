@@ -102,13 +102,12 @@ if "package:go_router/go_router.dart" not in s:
     s = s.replace("import 'package:flutter_riverpod/flutter_riverpod.dart';",
       "import 'package:flutter_riverpod/flutter_riverpod.dart';\nimport 'package:go_router/go_router.dart';")
 if "ابدأ رحلتك مع القرآن" not in s:
-    needle = """                    Text(section.description,
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 12),
-"""
-    insert = """                    Text(section.description,
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 12),
+    lessons_at = s.find('final lessons = lessonsForAge(section, c);')
+    children_at = s.find('children: [', lessons_at)
+    if lessons_at < 0 or children_at < 0:
+        raise SystemExit("Quran section list anchor not found safely")
+    insert_at = children_at + len('children: [')
+    insert = """
                     if (section.id == 'quran') ...[
                       Card(child: Padding(padding: const EdgeInsets.all(14),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -126,8 +125,7 @@ if "ابدأ رحلتك مع القرآن" not in s:
                       const SizedBox(height: 8),
                     ],
 """
-    if needle not in s: raise SystemExit("Quran section insertion anchor not found")
-    s = s.replace(needle, insert, 1)
+    s = s[:insert_at] + insert + s[insert_at:]
 section.write_text(s, encoding="utf-8")
 
 test = root / "test/learning_domains_test.dart"
