@@ -25,7 +25,7 @@ class LegacyContentScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final child = ref.watch(selectedChildProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('مكتبة نور وفداء')),
+      appBar: AppBar(title: const Text('مكتبة نور')),
       body: NoorPageBackground(
         asset: 'assets/branding/noor-bg-ocean.webp',
         child: child.when(
@@ -47,7 +47,7 @@ class LegacyContentScreen extends ConsumerWidget {
                         const Text('رحلة معرفة أكبر',
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
                         const SizedBox(height: 6),
-                        Text('محتوى إضافي من مكتبة نور وفداء، مرتب حسب المرحلة العمرية لـ ${learner.name}.',
+                        Text('محتوى إضافي من مكتبة نور، مرتب حسب المرحلة العمرية لـ ${learner.name}.',
                             style: const TextStyle(height: 1.5)),
                       ],
                     ),
@@ -85,14 +85,58 @@ class LegacyContentScreen extends ConsumerWidget {
                                 childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                                 children: [
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: AlignmentDirectional.centerEnd,
                                     child: Text(item.body, style: const TextStyle(fontSize: 16, height: 1.7)),
                                   ),
+                                  if (!item.contentVerified)
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber.shade50,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: Colors.amber.shade300),
+                                      ),
+                                      child: const Text(
+                                        'مادة تعليمية قيد المراجعة؛ راجع ولي الأمر أو المعلم المختص مصادرها قبل اعتمادها.',
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(fontSize: 13, height: 1.5),
+                                      ),
+                                    ),
+                                  if (item.steps.isNotEmpty) ...[
+                                    const SizedBox(height: 12),
+                                    const Align(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      child: Text('جرّب هذه الخطوات', style: TextStyle(fontWeight: FontWeight.w900)),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    for (var index = 0; index < item.steps.length; index++)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 4),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CircleAvatar(radius: 11, child: Text('${index + 1}', style: const TextStyle(fontSize: 11))),
+                                            const SizedBox(width: 8),
+                                            Expanded(child: Text(item.steps[index], textAlign: TextAlign.right, style: const TextStyle(height: 1.5))),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                  if (item.questions.isNotEmpty) ...[
+                                    const SizedBox(height: 12),
+                                    const Align(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      child: Text('فكّر وأجب', style: TextStyle(fontWeight: FontWeight.w900)),
+                                    ),
+                                    for (final question in item.questions)
+                                      _LegacyQuestionCard(question: question),
+                                  ],
                                   if (item.source.isNotEmpty) ...[
                                     const SizedBox(height: 8),
                                     Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text('المصدر: ${item.source}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      child: Text('المصدر: ${item.source}', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
                                     ),
                                   ],
                                 ],
@@ -110,6 +154,112 @@ class LegacyContentScreen extends ConsumerWidget {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+
+class _LegacyQuestionCard extends StatefulWidget {
+  const _LegacyQuestionCard({required this.question});
+
+  final Map<String, dynamic> question;
+
+  @override
+  State<_LegacyQuestionCard> createState() => _LegacyQuestionCardState();
+}
+
+class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
+  int? _selected;
+  bool _showAnswer = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final prompt = widget.question['question'] ??
+        widget.question['prompt'] ??
+        widget.question['text'] ??
+        '';
+    final rawOptions = widget.question['options'];
+    final options = rawOptions is List
+        ? rawOptions.whereType<String>().toList(growable: false)
+        : const <String>[];
+    final answerIndex = widget.question['answerIndex'];
+    final correct = answerIndex is num ? answerIndex.toInt() : -1;
+    final answered = _selected != null;
+    final isCorrect = _selected == correct;
+
+    return Card(
+      margin: const EdgeInsets.only(top: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('$prompt', textAlign: TextAlign.right,
+                style: const TextStyle(fontWeight: FontWeight.w800, height: 1.5)),
+            for (var index = 0; index < options.length; index++)
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: answered ? null : () => setState(() => _selected = index),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _selected == index
+                            ? Icons.radio_button_checked_rounded
+                            : Icons.radio_button_off_rounded,
+                        color: _selected == index
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.grey,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          options[index],
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(height: 1.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            if (options.isEmpty && widget.question['answer'] is String)
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  onPressed: () => setState(() => _showAnswer = !_showAnswer),
+                  child: Text(_showAnswer ? 'إخفاء الإجابة' : 'عرض الإجابة المقترحة'),
+                ),
+              ),
+            if (_showAnswer && widget.question['answer'] is String)
+              Text(
+                'الإجابة المقترحة: ${widget.question['answer']}',
+                textAlign: TextAlign.right,
+                style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700),
+              ),
+            if (answered)
+              Text(
+                isCorrect
+                    ? '${widget.question['praise'] ?? 'إجابة موفقة!'}'
+                    : '${widget.question['hint'] ?? 'حاول مرة أخرى بعد مراجعة الدرس.'}',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: isCorrect ? Colors.green.shade700 : Colors.orange.shade800,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            if (answered)
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  onPressed: () => setState(() => _selected = null),
+                  child: const Text('حاول مرة أخرى'),
+                ),
+              ),
+          ],
         ),
       ),
     );

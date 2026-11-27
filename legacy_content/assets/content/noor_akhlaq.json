@@ -15,7 +15,12 @@
         "اشكر من يساعدك.",
         "إذا أخطأت فاعتذر وحاول الإصلاح."
       ],
-      "source": "القرآن الكريم: إبراهيم 24–25"
+      "source": "القرآن الكريم: إبراهيم 24–25",
+      "category": "akhlaq",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nk_002",
@@ -30,7 +35,12 @@
         "قل ما أزعجك بكلمات واضحة.",
         "اقترح تبادل الأدوار أو اطلب مساعدة بالغ."
       ],
-      "source": "مهارة اجتماعية تربوية؛ حماية الطفل أولاً"
+      "source": "مهارة اجتماعية تربوية؛ حماية الطفل أولاً",
+      "category": "akhlaq",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nk_003",
@@ -45,7 +55,12 @@
         "لا تشارك كلمة المرور أو موقعك أو صورك الخاصة.",
         "أبلغ شخصاً بالغاً موثوقاً عن أي تواصل مريب."
       ],
-      "source": "قواعد أمان رقمي مناسبة للأطفال"
+      "source": "قواعد أمان رقمي مناسبة للأطفال",
+      "category": "akhlaq",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nk_004",
@@ -60,7 +75,12 @@
         "انتظر دورك بهدوء.",
         "اطلب اللعبة بأدب عندما يحين دورك."
       ],
-      "source": "نشاط اجتماعي تربوي"
+      "source": "نشاط اجتماعي تربوي",
+      "category": "akhlaq",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nk_005",
@@ -75,7 +95,12 @@
         "ابتعد إلى مكان فيه بالغ موثوق.",
         "احكِ ما حدث بوضوح واطلب المساعدة."
       ],
-      "source": "إرشادات حماية الطفل ومكافحة التنمر"
+      "source": "إرشادات حماية الطفل ومكافحة التنمر",
+      "category": "akhlaq",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nk_006",
@@ -90,7 +115,108 @@
         "أعد صياغة ما فهمته من رأي الآخر.",
         "قدم سبباً واضحاً أو قل لا أعرف بعد."
       ],
-      "source": "مهارات الحوار والتفكير النقدي"
+      "source": "مهارات الحوار والتفكير النقدي",
+      "category": "akhlaq",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_akhlaq_007",
+      "title": "أستأذن قبل استخدام الأشياء",
+      "emoji": "✨",
+      "minAge": 3,
+      "maxAge": 5,
+      "summary": "أتعلم أن أطلب الإذن قبل أخذ شيء يخص غيري.",
+      "body": "أتعلم أن أطلب الإذن قبل أخذ شيء يخص غيري.",
+      "steps": [
+        "انظر إلى الشيء الذي تريد استخدامه.",
+        "اسأل صاحبه بلطف.",
+        "أعده بعد الانتهاء."
+      ],
+      "questions": [
+        {
+          "question": "ماذا أقول قبل أخذ لعبة غيري؟",
+          "options": [
+            "هل تسمح لي؟",
+            "آخذها دون سؤال"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "آداب الاستئذان والحقوق؛ قيمة تربوية",
+      "category": "akhlaq",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_akhlaq_008",
+      "title": "أعتذر وأصلح الخطأ",
+      "emoji": "✨",
+      "minAge": 6,
+      "maxAge": 8,
+      "summary": "أتعلم أن الاعتذار يتبعه إصلاح ما أستطيع إصلاحه.",
+      "body": "أتعلم أن الاعتذار يتبعه إصلاح ما أستطيع إصلاحه.",
+      "steps": [
+        "صف ما حدث بصدق.",
+        "اعتذر دون تبرير الأذى.",
+        "اقترح طريقة لإصلاح الضرر."
+      ],
+      "questions": [
+        {
+          "question": "ما الخطوة بعد الاعتذار؟",
+          "options": [
+            "إصلاح ما يمكن إصلاحه",
+            "تكرار الخطأ"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "قيمة تربوية في تحمل المسؤولية",
+      "category": "akhlaq",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_akhlaq_009",
+      "title": "أوازن بين الصراحة واللطف",
+      "emoji": "✨",
+      "minAge": 9,
+      "maxAge": 12,
+      "summary": "أتمرن على قول الحقيقة باحترام دون تجريح أو كشف أسرار الآخرين.",
+      "body": "أتمرن على قول الحقيقة باحترام دون تجريح أو كشف أسرار الآخرين.",
+      "steps": [
+        "حدد الحقيقة التي تريد قولها.",
+        "اختر وقتًا مناسبًا.",
+        "استخدم كلمات واضحة ومحترمة."
+      ],
+      "questions": [
+        {
+          "question": "هل الصراحة تبرر الإهانة؟",
+          "options": [
+            "لا، يمكن قول الحقيقة بلطف",
+            "نعم، بأي أسلوب"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "مهارات تواصل وحماية الخصوصية",
+      "category": "akhlaq",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     }
   ]
 }

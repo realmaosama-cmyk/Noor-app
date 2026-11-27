@@ -15,7 +15,12 @@
         "أردد ما أستطيع مع ولي الأمر.",
         "أشير إلى اسم السورة في المصحف."
       ],
-      "source": "القرآن الكريم: سورتا الإخلاص والفلق"
+      "source": "القرآن الكريم: سورتا الإخلاص والفلق",
+      "category": "quran",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nq_002",
@@ -30,7 +35,12 @@
         "حدد الكلمات التي تحتاج إلى شرح.",
         "اكتب أو ارسم عملاً صالحاً تقوم به اليوم."
       ],
-      "source": "القرآن الكريم: سورة العصر، الآيات 1–3"
+      "source": "القرآن الكريم: سورة العصر، الآيات 1–3",
+      "category": "quran",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nq_003",
@@ -45,7 +55,12 @@
         "دوّن ملاحظة عن السماء أو النبات أو الماء.",
         "اكتب نعمة واحدة وكيف تشكر الله عليها."
       ],
-      "source": "القرآن الكريم: آل عمران 190–191"
+      "source": "القرآن الكريم: آل عمران 190–191",
+      "category": "quran",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nq_004",
@@ -60,7 +75,12 @@
         "لاحظ الفرق في النطق.",
         "كرر المثال بعد المعلم."
       ],
-      "source": "تعليم تجويد شفهي على يد معلم مؤهل"
+      "source": "تعليم تجويد شفهي على يد معلم مؤهل",
+      "category": "quran",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nq_005",
@@ -75,7 +95,12 @@
         "سمّع ما تتذكره.",
         "راجع مواضع الخطأ مع مصحف موثوق."
       ],
-      "source": "نشاط مراجعة قرآنية؛ المصحف المعتمد"
+      "source": "نشاط مراجعة قرآنية؛ المصحف المعتمد",
+      "category": "quran",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nq_006",
@@ -90,7 +115,108 @@
         "استمع دون مقاطعة.",
         "اطلب المساعدة عند القراءة."
       ],
-      "source": "آداب تعليمية بإشراف الأسرة"
+      "source": "آداب تعليمية بإشراف الأسرة",
+      "category": "quran",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_quran_007",
+      "title": "أتعرف إلى سورة الفاتحة",
+      "emoji": "✨",
+      "minAge": 3,
+      "maxAge": 5,
+      "summary": "أستمع إلى سورة الفاتحة مع ولي أمري وأتعرف أنها نقرأها في الصلاة.",
+      "body": "أستمع إلى سورة الفاتحة مع ولي أمري وأتعرف أنها نقرأها في الصلاة.",
+      "steps": [
+        "استمع إلى السورة من مصحف معتمد.",
+        "ردد ما تستطيع دون ضغط.",
+        "أشر إلى بداية السورة ونهايتها."
+      ],
+      "questions": [
+        {
+          "question": "أين نقرأ سورة الفاتحة؟",
+          "options": [
+            "في الصلاة",
+            "قبل النوم"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "القرآن الكريم: سورة الفاتحة",
+      "category": "quran",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_quran_008",
+      "title": "أرتب آيات قصيرة",
+      "emoji": "✨",
+      "minAge": 6,
+      "maxAge": 8,
+      "summary": "أتعلم أن ترتيب الآيات مهم، وأراجع ترتيب آيات قصيرة مع المعلم من المصحف.",
+      "body": "أتعلم أن ترتيب الآيات مهم، وأراجع ترتيب آيات قصيرة مع المعلم من المصحف.",
+      "steps": [
+        "افتح المصحف مع المعلم.",
+        "اقرأ الآيات بالترتيب.",
+        "اشرح معنى كلمة تعرفها."
+      ],
+      "questions": [
+        {
+          "question": "لماذا نحافظ على ترتيب الآيات؟",
+          "options": [
+            "لأن النص له ترتيب محفوظ",
+            "لأننا نختار ترتيبًا جديدًا"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "المصحف الشريف؛ مراجعة نص الآيات من طبعة معتمدة",
+      "category": "quran",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_quran_009",
+      "title": "خطة حفظ ومراجعة متوازنة",
+      "emoji": "✨",
+      "minAge": 9,
+      "maxAge": 12,
+      "summary": "أضع هدفًا صغيرًا للحفظ والمراجعة، وأوازن بين التكرار والفهم والراحة.",
+      "body": "أضع هدفًا صغيرًا للحفظ والمراجعة، وأوازن بين التكرار والفهم والراحة.",
+      "steps": [
+        "اختر مقطعًا مناسبًا مع المعلم.",
+        "قسّم المراجعة إلى جلسات قصيرة.",
+        "سجل ما أتقنته وما يحتاج دعمًا."
+      ],
+      "questions": [
+        {
+          "question": "ما الأفضل عند تعثر الحفظ؟",
+          "options": [
+            "تقسيم المقطع وطلب المساعدة",
+            "ترك المراجعة تمامًا"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "خطة تعلم شخصية؛ يراجع مقدار الحفظ مع معلم القرآن",
+      "category": "quran",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     }
   ]
 }

@@ -28,7 +28,7 @@ if "context.push('/legacy-content')" not in home:
     anchor = "actions: ["
     button = """
           IconButton(
-              tooltip: 'مكتبة نور وفداء',
+              tooltip: 'مكتبة نور',
               onPressed: () => context.push('/legacy-content'),
               icon: const Icon(Icons.auto_awesome_rounded)),
 """

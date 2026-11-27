@@ -15,7 +15,12 @@
         "اذكر معنى الصبر بكلماتك.",
         "لون سفينة وتحدث عن القصة."
       ],
-      "source": "القرآن الكريم: سورة نوح؛ هود 25–49"
+      "source": "القرآن الكريم: سورة نوح؛ هود 25–49",
+      "category": "prophets",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_002",
@@ -30,7 +35,12 @@
         "حدد موقفاً ظهر فيه الصبر.",
         "ناقش الفرق بين العفو وحماية النفس من الأذى."
       ],
-      "source": "القرآن الكريم: سورة يوسف"
+      "source": "القرآن الكريم: سورة يوسف",
+      "category": "prophets",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_003",
@@ -45,7 +55,12 @@
         "استخرج أسئلة التفكر في الآيات.",
         "اكتب خلاصة من ثلاثة أسطر."
       ],
-      "source": "القرآن الكريم: الأنعام 74–79؛ البقرة 125–129"
+      "source": "القرآن الكريم: الأنعام 74–79؛ البقرة 125–129",
+      "category": "prophets",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_004",
@@ -60,7 +75,12 @@
         "اذكر من نطلب منه المساعدة عند الخوف.",
         "ارسم موجة وتحدث عن القصة."
       ],
-      "source": "القرآن الكريم: القصص 7–13"
+      "source": "القرآن الكريم: القصص 7–13",
+      "category": "prophets",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_005",
@@ -75,7 +95,12 @@
         "استخرج معنى الرجوع إلى الله.",
         "اكتب كيف تصلح خطأ ارتكبته."
       ],
-      "source": "القرآن الكريم: الأنبياء 87–88"
+      "source": "القرآن الكريم: الأنبياء 87–88",
+      "category": "prophets",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "npr_006",
@@ -90,7 +115,108 @@
         "سجل القيمة في كل موقف.",
         "اكتب أوجه الشبه والاختلاف دون إضافة تفاصيل غير موجودة في النص."
       ],
-      "source": "القرآن الكريم: سور يوسف والقصص؛ تفسير ميسر"
+      "source": "القرآن الكريم: سور يوسف والقصص؛ تفسير ميسر",
+      "category": "prophets",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_prophets_007",
+      "title": "قصة نوح عليه السلام",
+      "emoji": "✨",
+      "minAge": 3,
+      "maxAge": 5,
+      "summary": "أتعرف على أن نوحًا عليه السلام دعا قومه إلى عبادة الله وصبر.",
+      "body": "أتعرف على أن نوحًا عليه السلام دعا قومه إلى عبادة الله وصبر.",
+      "steps": [
+        "استمع إلى القصة من القرآن وتفسير ميسر.",
+        "اذكر معنى الصبر.",
+        "ارسم سفينة."
+      ],
+      "questions": [
+        {
+          "question": "ما القيمة التي نتعلمها؟",
+          "options": [
+            "الصبر",
+            "إيذاء الآخرين"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "القرآن الكريم: سورة نوح؛ هود 25–49",
+      "category": "prophets",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_prophets_008",
+      "title": "أتدبر قصة موسى عليه السلام",
+      "emoji": "✨",
+      "minAge": 6,
+      "maxAge": 8,
+      "summary": "أتعرف على معاني الثقة بالله وطلب المساعدة في قصة موسى.",
+      "body": "أتعرف على معاني الثقة بالله وطلب المساعدة في قصة موسى.",
+      "steps": [
+        "اقرأ الآيات مع المعلم.",
+        "حدد موقفًا فيه عناية الله.",
+        "ناقش كيف نطلب المساعدة."
+      ],
+      "questions": [
+        {
+          "question": "هل نطلب المساعدة عند الحاجة؟",
+          "options": [
+            "نعم",
+            "لا"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "القرآن الكريم: سورة القصص؛ طه",
+      "category": "prophets",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_prophets_009",
+      "title": "أقارن بين مواضع القصة القرآنية",
+      "emoji": "✨",
+      "minAge": 9,
+      "maxAge": 12,
+      "summary": "ألاحظ أن القرآن يذكر جوانب متعددة من قصة النبي بحسب سياق السورة.",
+      "body": "ألاحظ أن القرآن يذكر جوانب متعددة من قصة النبي بحسب سياق السورة.",
+      "steps": [
+        "اختر قصة نبي وردت في أكثر من سورة.",
+        "قارن الآيات مع تفسير ميسر.",
+        "اكتب قيمة مشتركة دون إضافة تفاصيل غير ثابتة."
+      ],
+      "questions": [
+        {
+          "question": "كيف نتعامل مع تفصيل غير مذكور في القرآن؟",
+          "options": [
+            "لا نجزم به دون دليل",
+            "نضيفه من الخيال"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "القرآن الكريم وتفسير ميسر معتمد؛ مراجعة المعلم",
+      "category": "prophets",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     }
   ]
 }

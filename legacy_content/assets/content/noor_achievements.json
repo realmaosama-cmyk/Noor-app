@@ -15,7 +15,12 @@
         "اسأل سؤالاً واحداً.",
         "شارك ما اكتشفته مع أسرتك."
       ],
-      "source": "نظام تحفيز تربوي أصلي من NOOR"
+      "source": "نظام تحفيز تربوي أصلي من NOOR",
+      "category": "achievements",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nac_002",
@@ -30,7 +35,12 @@
         "سجل محاولة أولى.",
         "جرب استراتيجية جديدة ولاحظ الفرق."
       ],
-      "source": "نظام تحفيز تربوي أصلي من NOOR"
+      "source": "نظام تحفيز تربوي أصلي من NOOR",
+      "category": "achievements",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nac_003",
@@ -45,7 +55,12 @@
         "اتفق مع ولي الأمر على خطة.",
         "نفذ وقيّم الأثر دون تصوير أو نشر بيانات شخصية."
       ],
-      "source": "نظام تحفيز تربوي أصلي من NOOR"
+      "source": "نظام تحفيز تربوي أصلي من NOOR",
+      "category": "achievements",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nac_004",
@@ -60,7 +75,12 @@
         "استمع أو اقرأ مع شخص بالغ.",
         "شارك أكثر جزء أعجبك."
       ],
-      "source": "نظام إنجازات NOOR؛ تشجيع بلا مقارنة"
+      "source": "نظام إنجازات NOOR؛ تشجيع بلا مقارنة",
+      "category": "achievements",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nac_005",
@@ -75,7 +95,12 @@
         "قسمه إلى ثلاث خطوات.",
         "راجع ما تعلمته واحتفل بالتقدم."
       ],
-      "source": "نظام إنجازات NOOR"
+      "source": "نظام إنجازات NOOR",
+      "category": "achievements",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "nac_006",
@@ -90,7 +115,108 @@
         "نفذ المشروع بموافقة ولي الأمر.",
         "اكتب ما نجح وما ستطوره لاحقاً."
       ],
-      "source": "نظام إنجازات NOOR"
+      "source": "نظام إنجازات NOOR",
+      "category": "achievements",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_achievements_007",
+      "title": "شارة المحاولة الأولى",
+      "emoji": "✨",
+      "minAge": 3,
+      "maxAge": 5,
+      "summary": "أحتفل بالمحاولة والتعلم دون مقارنة نفسي بغيري.",
+      "body": "أحتفل بالمحاولة والتعلم دون مقارنة نفسي بغيري.",
+      "steps": [
+        "اختر نشاطًا جديدًا.",
+        "جرب بمساعدة بالغ.",
+        "احتفل بالمحاولة."
+      ],
+      "questions": [
+        {
+          "question": "ما الذي نحتفل به؟",
+          "options": [
+            "المحاولة والتعلم",
+            "أن أكون أفضل من الجميع"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "مبدأ تحفيز تربوي؛ لا يمنح التطبيق الشارة تلقائيًا بعد",
+      "category": "achievements",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_achievements_008",
+      "title": "شارة التحقق",
+      "emoji": "✨",
+      "minAge": 6,
+      "maxAge": 8,
+      "summary": "أتابع هدفًا صغيرًا وأراجع تقدمي بهدوء.",
+      "body": "أتابع هدفًا صغيرًا وأراجع تقدمي بهدوء.",
+      "steps": [
+        "اختر هدفًا أسبوعيًا.",
+        "ضع علامة عند المحاولة.",
+        "اطلب مساعدة إذا صعب عليك."
+      ],
+      "questions": [
+        {
+          "question": "ماذا أفعل إذا لم أنجح من أول مرة؟",
+          "options": [
+            "أجرب بطريقة أخرى",
+            "أتوقف فورًا"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "مبدأ تحفيز تربوي؛ الربط الآلي بنظام الإنجازات قيد التطوير",
+      "category": "achievements",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_achievements_009",
+      "title": "شارة التعلم المسؤول",
+      "emoji": "✨",
+      "minAge": 9,
+      "maxAge": 12,
+      "summary": "أراجع معلومة وأتحقق من مصدرها قبل مشاركتها.",
+      "body": "أراجع معلومة وأتحقق من مصدرها قبل مشاركتها.",
+      "steps": [
+        "اختر معلومة تعليمية.",
+        "ابحث عن مصدر أصلي.",
+        "اكتب ما تأكدت منه."
+      ],
+      "questions": [
+        {
+          "question": "متى أشارك المعلومة؟",
+          "options": [
+            "بعد التحقق من مصدرها",
+            "قبل التحقق"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "مبدأ تعلم مسؤول؛ الربط الآلي بنظام الإنجازات قيد التطوير",
+      "category": "achievements",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     }
   ]
 }

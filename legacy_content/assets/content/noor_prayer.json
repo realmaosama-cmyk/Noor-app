@@ -15,7 +15,12 @@
         "رتب الصور من الفجر إلى العشاء.",
         "اسأل ولي الأمر عن الصلاة القادمة."
       ],
-      "source": "مادة تعليمية أصلية؛ مراجعة ولي الأمر لازمة"
+      "source": "مادة تعليمية أصلية؛ مراجعة ولي الأمر لازمة",
+      "category": "prayer",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "np_002",
@@ -30,7 +35,12 @@
         "رتب بطاقات الخطوات حسب الشرح المعتمد للأسرة.",
         "توضأ عملياً مع مراعاة عدم الإسراف."
       ],
-      "source": "تعليم عملي بإشراف ولي الأمر ومعلم موثوق"
+      "source": "تعليم عملي بإشراف ولي الأمر ومعلم موثوق",
+      "category": "prayer",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "np_003",
@@ -45,7 +55,12 @@
         "تعلم معنى الفاتحة مع تفسير ميسر موثوق.",
         "بعد الصلاة، اكتب شيئاً ساعدك على التركيز."
       ],
-      "source": "القرآن الكريم: المؤمنون 1–2؛ شرح تربوي مبسط"
+      "source": "القرآن الكريم: المؤمنون 1–2؛ شرح تربوي مبسط",
+      "category": "prayer",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "np_004",
@@ -60,7 +75,12 @@
         "افرد السجادة بمساعدة بالغ.",
         "أعدها إلى مكانها بعد الانتهاء."
       ],
-      "source": "نشاط عادات يومية"
+      "source": "نشاط عادات يومية",
+      "category": "prayer",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "np_005",
@@ -75,7 +95,12 @@
         "اذكر سلوكاً يحافظ على نظافته.",
         "طبق الأدب مع مراعاة تعليمات المسجد."
       ],
-      "source": "آداب عامة للمسجد"
+      "source": "آداب عامة للمسجد",
+      "category": "prayer",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "np_006",
@@ -90,7 +115,108 @@
         "سجل ما يساعدك على التذكر.",
         "راجع الجدول أسبوعياً وعدله."
       ],
-      "source": "أداة تنظيم شخصية بإشراف ولي الأمر"
+      "source": "أداة تنظيم شخصية بإشراف ولي الأمر",
+      "category": "prayer",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_prayer_007",
+      "title": "أستعد للصلاة بهدوء",
+      "emoji": "✨",
+      "minAge": 3,
+      "maxAge": 5,
+      "summary": "أتعرف على مكان الصلاة وأجهز ما أحتاجه بمساعدة أسرتي.",
+      "body": "أتعرف على مكان الصلاة وأجهز ما أحتاجه بمساعدة أسرتي.",
+      "steps": [
+        "اختر مكانًا نظيفًا.",
+        "ضع سجادتك بمساعدة بالغ.",
+        "استعد بهدوء."
+      ],
+      "questions": [
+        {
+          "question": "من يساعدني على تعلم الصلاة؟",
+          "options": [
+            "ولي أمري أو معلمي",
+            "لا أحتاج إلى مساعدة"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "تعليم عملي بإشراف ولي الأمر",
+      "category": "prayer",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_prayer_008",
+      "title": "أراجع ترتيب الوضوء",
+      "emoji": "✨",
+      "minAge": 6,
+      "maxAge": 8,
+      "summary": "أرتب خطوات الوضوء كما تعلمتها من مصدر أسرتي المعتمد.",
+      "body": "أرتب خطوات الوضوء كما تعلمتها من مصدر أسرتي المعتمد.",
+      "steps": [
+        "راجع الخطوات مع ولي أمرك.",
+        "رتب البطاقات.",
+        "طبق عمليًا بإشراف بالغ."
+      ],
+      "questions": [
+        {
+          "question": "ماذا أفعل إذا نسيت خطوة؟",
+          "options": [
+            "أسأل ولي أمري أو المعلم",
+            "أخمن الحكم"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "تعليم فقهي؛ يراجع ترتيب الخطوات وفق المرجع المعتمد للأسرة",
+      "category": "prayer",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_prayer_009",
+      "title": "أفهم أوقات الصلاة ومسؤولية التعلم",
+      "emoji": "✨",
+      "minAge": 9,
+      "maxAge": 12,
+      "summary": "أتعرف على معنى مواقيت الصلاة وأستخدم تقويمًا موثوقًا بمساعدة الأسرة.",
+      "body": "أتعرف على معنى مواقيت الصلاة وأستخدم تقويمًا موثوقًا بمساعدة الأسرة.",
+      "steps": [
+        "تعرف على أسماء الصلوات.",
+        "قارن وقتين في تقويم محلي موثوق.",
+        "اسأل عن اختلاف التوقيت بين الفصول."
+      ],
+      "questions": [
+        {
+          "question": "هل تتغير أوقات الصلاة خلال السنة؟",
+          "options": [
+            "نعم، بحسب حركة الشمس والفصول",
+            "لا، تبقى ثابتة بالدقيقة"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "مواقيت الصلاة؛ يعتمد التقويم المحلي الموثوق",
+      "category": "prayer",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     }
   ]
 }

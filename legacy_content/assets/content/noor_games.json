@@ -15,7 +15,12 @@
         "اقلب بطاقتين في كل دور.",
         "عند التطابق، اذكر مثالاً للقيمة."
       ],
-      "source": "لعبة أصلية من NOOR"
+      "source": "لعبة أصلية من NOOR",
+      "category": "games",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "ng_002",
@@ -30,7 +35,12 @@
         "رتبها من البداية إلى النهاية.",
         "اشرح اختيارك لشخص بالغ."
       ],
-      "source": "لعبة أصلية من NOOR"
+      "source": "لعبة أصلية من NOOR",
+      "category": "games",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "ng_003",
@@ -45,7 +55,12 @@
         "اقترح حلين على الأقل.",
         "جرب الحل وسجل ما ستطوره."
       ],
-      "source": "أنشطة STEM أصلية من NOOR"
+      "source": "أنشطة STEM أصلية من NOOR",
+      "category": "games",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "ng_004",
@@ -60,7 +75,12 @@
         "ابحث عن صورتين تبدأان به.",
         "انطق الحرف والكلمة معاً."
       ],
-      "source": "لعبة لغوية أصلية من NOOR"
+      "source": "لعبة لغوية أصلية من NOOR",
+      "category": "games",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "ng_005",
@@ -75,7 +95,12 @@
         "أضف أو أزل عدداً صغيراً.",
         "اشرح كيف وصلت إلى الإجابة."
       ],
-      "source": "لعبة رياضيات أصلية من NOOR"
+      "source": "لعبة رياضيات أصلية من NOOR",
+      "category": "games",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     },
     {
       "id": "ng_006",
@@ -90,7 +115,108 @@
         "ابنِ النموذج بمواد آمنة.",
         "اختبره وسجل تحسيناً واحداً."
       ],
-      "source": "تحدي STEM أصلي من NOOR"
+      "source": "تحدي STEM أصلي من NOOR",
+      "category": "games",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_games_007",
+      "title": "لعبة فرز الألوان",
+      "emoji": "✨",
+      "minAge": 3,
+      "maxAge": 5,
+      "summary": "أصنف أشياء آمنة حسب اللون وأتعلم الملاحظة.",
+      "body": "أصنف أشياء آمنة حسب اللون وأتعلم الملاحظة.",
+      "steps": [
+        "اختر 3 ألوان.",
+        "ضع كل قطعة مع لونها.",
+        "صف ما لاحظته."
+      ],
+      "questions": [
+        {
+          "question": "كم لونًا صنفت؟",
+          "options": [
+            "ثلاثة",
+            "لا شيء"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "لعبة أصلية من NOOR",
+      "category": "games",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_games_008",
+      "title": "تحدي الذاكرة البصرية",
+      "emoji": "✨",
+      "minAge": 6,
+      "maxAge": 8,
+      "summary": "أقوي ذاكرتي بملاحظة ترتيب صور ثم إعادة ترتيبه.",
+      "body": "أقوي ذاكرتي بملاحظة ترتيب صور ثم إعادة ترتيبه.",
+      "steps": [
+        "شاهد 5 صور لمدة قصيرة.",
+        "غط الصور.",
+        "أعد ترتيبها من الذاكرة."
+      ],
+      "questions": [
+        {
+          "question": "ما الاستراتيجية المفيدة؟",
+          "options": [
+            "التركيز ثم التذكر",
+            "التخمين دائمًا"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "لعبة ذاكرة أصلية من NOOR",
+      "category": "games",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
+    },
+    {
+      "id": "noor_games_009",
+      "title": "لغز اكتشاف النمط",
+      "emoji": "✨",
+      "minAge": 9,
+      "maxAge": 12,
+      "summary": "أحل نمطًا منطقيًا وأشرح سبب اختياري.",
+      "body": "أحل نمطًا منطقيًا وأشرح سبب اختياري.",
+      "steps": [
+        "ابدأ بنمط أرقام أو أشكال.",
+        "اكتب القاعدة.",
+        "اختبر القاعدة على مثال جديد."
+      ],
+      "questions": [
+        {
+          "question": "ما الذي يجعل الحل قويًا؟",
+          "options": [
+            "شرح القاعدة والتحقق منها",
+            "اختيار إجابة بلا سبب"
+          ],
+          "answerIndex": 0,
+          "hint": "فكر بهدوء ثم اختر الإجابة الأقرب لما تعلمته.",
+          "praise": "أحسنت! راجع السبب وتأكد من فهمك."
+        }
+      ],
+      "source": "نشاط تفكير منطقي أصلي من NOOR",
+      "category": "games",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending",
+      "citation_status": "needs_review"
     }
   ]
 }
