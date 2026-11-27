@@ -172,6 +172,7 @@ class _LegacyQuestionCard extends StatefulWidget {
 
 class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
   int? _selected;
+  bool _showAnswer = false;
 
   @override
   Widget build(BuildContext context) {
@@ -224,6 +225,20 @@ class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
                     ],
                   ),
                 ),
+              ),
+            if (options.isEmpty && widget.question['answer'] is String)
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  onPressed: () => setState(() => _showAnswer = !_showAnswer),
+                  child: Text(_showAnswer ? 'إخفاء الإجابة' : 'عرض الإجابة المقترحة'),
+                ),
+              ),
+            if (_showAnswer && widget.question['answer'] is String)
+              Text(
+                'الإجابة المقترحة: ${widget.question['answer']}',
+                textAlign: TextAlign.right,
+                style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700),
               ),
             if (answered)
               Text(
