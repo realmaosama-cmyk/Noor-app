@@ -203,7 +203,11 @@ class LegacyContentRepository {
     final source = map['source'];
     final sourceParts = <String>[
       if (source is String && source.trim().isNotEmpty) source.trim(),
-      if (source is Map) _first([source['reference'], source['name'], source['url']]),
+      if (source is Map) _first([
+        source['reference'], source['name'], source['url'], source['license'],
+      ]),
+      _str(map['source_note']).isEmpty ? '' : _str(map['source_note']),
+      _str(map['source_type']).isEmpty ? '' : 'نوع المصدر: ${map['source_type']}',
       _str(map['narrator']).isEmpty ? '' : 'الراوي: ${_str(map['narrator'])}',
       _str(map['book']).isEmpty ? '' : 'الكتاب: ${_str(map['book'])}',
       if (map['number'] is num || map['number'] is String) 'رقم: ${map['number']}',
