@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/widgets/noor_brand.dart';
 import '../../data/content/legacy_content.dart';
 import '../../data/providers.dart';
+import 'quran_library_screen.dart';
 
 class LegacyContentScreen extends ConsumerWidget {
   const LegacyContentScreen({super.key});
@@ -55,7 +56,20 @@ class LegacyContentScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
                 for (final section in _sections)
-                  FutureBuilder<List<LegacyContentItem>>(
+                  if (section.$1 == 'quran')
+                    Card(
+                      child: ListTile(
+                        leading: const CircleAvatar(child: Text('📖')),
+                        title: Text(section.$2, style: const TextStyle(fontWeight: FontWeight.w800)),
+                        subtitle: const Text('فهرس السور المتاحة ونصوص الآيات'),
+                        trailing: const Icon(Icons.chevron_left_rounded),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const QuranLibraryScreen()),
+                        ),
+                      ),
+                    )
+                  else
+                    FutureBuilder<List<LegacyContentItem>>(
                     future: LegacyContentRepository.loadForSection(section.$1, learner.age),
                     builder: (context, snapshot) {
                       final items = snapshot.data ?? const <LegacyContentItem>[];

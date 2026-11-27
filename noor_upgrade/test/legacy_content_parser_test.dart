@@ -157,5 +157,23 @@ void main() {
       expect(items.single.suitableFor(6), isTrue);
       expect(items.single.suitableFor(10), isFalse);
     });
+
+    test('parses legacy Quran surah names and verse arrays', () {
+      final items = LegacyContentRepository.parseDocument(
+        jsonEncode({
+          'surahs': [
+            {'surahNumber': 112, 'name': 'الإخلاص', 'ayahs': [
+              {'number': 1, 'text': 'قُلْ هُوَ ٱللَّهُ أَحَدٌ'},
+              {'number': 2, 'text': 'ٱللَّهُ ٱلصَّمَدُ'},
+            ]}
+          ],
+        }),
+        'quran_surahs.json',
+      );
+      expect(items, hasLength(1));
+      expect(items.single.title, 'الإخلاص');
+      expect(items.single.body, contains('قُلْ هُوَ ٱللَّهُ أَحَدٌ'));
+      expect(items.single.body, contains('ٱللَّهُ ٱلصَّمَدُ'));
+    });
   });
 }
