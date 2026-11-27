@@ -19,21 +19,23 @@ class LegacyContentRepository {
     'prayer': ['prayer_hadith.json', 'lessons/a_salah_five.json',
       'lessons/a_salah_rakat.json', ..._weeks],
     'adhkar': ['adhkar_hadith.json', 'hadith_lessons.json',
-      'lessons/t_adab_after_meal.json', 'lessons/t_adab_food.json',
-      'lessons/t_adab_greet.json', 'lessons/t_adab_sleep.json',
-      'lessons/t_adab_sneeze.json'],
+      'section_ayat_lessons.json', 'lessons/t_adab_after_meal.json',
+      'lessons/t_adab_food.json', 'lessons/t_adab_greet.json',
+      'lessons/t_adab_sleep.json', 'lessons/t_adab_sneeze.json'],
     'akhlaq': ['akhlaq_hadith.json', 'hadith_lessons.json',
-      'lessons/t_akhlaq_kind_word.json', 'lessons/t_akhlaq_share.json',
-      'lessons/t_akhlaq_thanks.json', 'lessons/t_akhlaq_tidy.json'],
-    'seerah': ['seerah_hadith.json', 'hadith_lessons.json'],
-    'figures': ['figures_hadith.json', 'hadith_lessons.json'],
+      'nour_more_lessons.json', 'lessons/t_akhlaq_kind_word.json',
+      'lessons/t_akhlaq_share.json', 'lessons/t_akhlaq_thanks.json',
+      'lessons/t_akhlaq_tidy.json'],
+    'seerah': ['seerah_hadith.json', 'hadith_lessons.json',
+      'section_ayat_lessons.json'],
+    'figures': ['figures_hadith.json', 'hadith_lessons.json',
+      'section_ayat_lessons.json'],
     'prophets': ['prophets_lessons.json', 'prophets_ayat.json'],
     'learn': ['learn_lessons.json', 'nour_more_lessons.json', ..._weeks,
       'lessons/a_arabic_letters_1.json', 'lessons/a_arabic_letters_2.json',
       'lessons/a_arabic_letters_3.json', 'lessons/a_arabic_letters_4.json',
       'lessons/a_arabic_letters_5.json', 'lessons/a_arabic_letters_6.json',
       'lessons/a_arabic_letters_7.json'],
-    'challenges': ['games.json', 'games_pack.json'],
     'games': ['games.json', 'games_pack.json'],
   };
 
@@ -49,7 +51,12 @@ class LegacyContentRepository {
           if (list is! List) continue;
           for (final rawItem in list) {
             if (rawItem is! Map<dynamic, dynamic>) continue;
-            final item = _parse(Map<String, dynamic>.from(rawItem), file);
+            final map = Map<String, dynamic>.from(rawItem);
+            final category = _str(map['category']);
+            if (category.isNotEmpty && sectionId != 'games' && category != sectionId) {
+              continue;
+            }
+            final item = _parse(map, file);
             if (item != null && item.suitableFor(age)) {
               result.putIfAbsent(item.id, () => item);
             }
@@ -61,7 +68,7 @@ class LegacyContentRepository {
     }
     final items = result.values.toList()
       ..sort((a, b) => a.title.compareTo(b.title));
-    // Never truncate imported curriculum: the caller can paginate or filter it.
+    // Keep every matching item; no silent 120-item cap.
     return items;
   }
 
