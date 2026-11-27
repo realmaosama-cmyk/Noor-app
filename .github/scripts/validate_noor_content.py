@@ -125,6 +125,37 @@ for path in ALL_JSON:
         title_keys.add(title_key)
 
 
+# Preserve the migrated activity and voice banks as build-time integrity gates.
+for filename, collection, minimum in (
+    ("games.json", "games", 27),
+    ("noor_games.json", "lessons", 9),
+    ("noor_achievements.json", "lessons", 9),
+    ("lesson_phrases.json", "phrases", 3000),
+):
+    path = ROOT / filename
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        values = data.get(collection, [])
+        if not isinstance(values, list) or len(values) < minimum:
+            errors.append(f"{filename}: expected at least {minimum} {collection}, found {len(values) if isinstance(values, list) else 'invalid'}")
+    except Exception as exc:
+        errors.append(f"{filename}: unable to validate migrated content: {exc}")
+
+voice_path = ROOT / "voice_phrases.json"
+try:
+    voice_data = json.loads(voice_path.read_text(encoding="utf-8"))
+    voice_groups = voice_data.get("groups", [])
+    voice_phrases = [
+        phrase for group in voice_groups if isinstance(group, dict)
+        for phrase in group.get("phrases", []) if isinstance(phrase, dict)
+    ]
+    if len(voice_groups) < 3 or len(voice_phrases) < 3700:
+        errors.append(f"voice_phrases.json: incomplete voice bank ({len(voice_groups)} groups / {len(voice_phrases)} phrases)")
+    if any(not isinstance(phrase.get("text"), str) or not phrase["text"].strip() for phrase in voice_phrases):
+        errors.append("voice_phrases.json: empty phrase text detected")
+except Exception as exc:
+    errors.append(f"voice_phrases.json: unable to validate voice bank: {exc}")
+
 # The Quran is a strict integrity gate, not an optional legacy pack.
 quran_path = ROOT / "quran_surahs.json"
 if not quran_path.is_file():
