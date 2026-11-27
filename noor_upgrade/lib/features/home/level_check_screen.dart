@@ -230,21 +230,24 @@ class _LevelQuestionCard extends StatelessWidget {
             Text('سؤال $index • ${question['text']}',
                 textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.w800, height: 1.6)),
-            RadioGroup<int>(
-              groupValue: selected,
-              onChanged: submitted ? null : (value) {
-                if (value != null) onSelect(value);
-              },
-              child: Column(
-                children: [
-                  for (var i = 0; i < options.length; i++)
-                    RadioListTile<int>(
-                      value: i,
-                      title: Text(options[i], textAlign: TextAlign.right),
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                ],
+            IgnorePointer(
+              ignoring: submitted,
+              child: RadioGroup<int>(
+                groupValue: selected,
+                onChanged: (value) {
+                  if (value != null) onSelect(value);
+                },
+                child: Column(
+                  children: [
+                    for (var i = 0; i < options.length; i++)
+                      RadioListTile<int>(
+                        value: i,
+                        title: Text(options[i], textAlign: TextAlign.right),
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                  ],
+                ),
               ),
             ),
             if (submitted)
