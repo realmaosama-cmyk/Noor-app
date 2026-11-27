@@ -47,8 +47,8 @@ if re.search(r'(?m)^  video_player:', pubspec) is None:
     # Insert at the top of the dependencies section so line endings and
     # dependency ordering in the upstream pubspec cannot prevent the patch.
     pubspec, count = re.subn(
-        r'(?m)^dependencies:[ \\t]*,
-        'dependencies:\\n  video_player: ^2.9.1',
+        r'(?m)^dependencies:[ \t]*$',
+        'dependencies:\n  video_player: ^2.9.1',
         pubspec,
         count=1,
     )
