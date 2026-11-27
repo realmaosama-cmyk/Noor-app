@@ -44,6 +44,8 @@ jobs:
           python3 "$GITHUB_WORKSPACE/.github/scripts/validate_noor_content.py" "$GITHUB_WORKSPACE/legacy_content/assets/content"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/data/content/legacy_content.dart" "$PROJECT_DIR/lib/data/content/legacy_content.dart"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/legacy_content_screen.dart" "$PROJECT_DIR/lib/features/home/legacy_content_screen.dart"
+          mkdir -p "$PROJECT_DIR/test"
+          cp -a "$GITHUB_WORKSPACE/noor_upgrade/test/." "$PROJECT_DIR/test/"
           python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
           test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
           test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
