@@ -202,6 +202,8 @@ class LegacyContentRepository {
       map['hadithText'], map['hadith'], map['matn'], map['verseText'], map['arabicText'], map['arabic'], map['verse'],
       map['content'], map['text'], map['body'], map['kidMeaning'],
       map['goal'], map['objective'], map['learned'], map['toddlerSay'], map['say'], map['intro'],
+      if (map['ayahs'] is List)
+        (map['ayahs'] as List).map((ayah) => ayah is Map ? _str(ayah['text']) : _str(ayah)).where((ayah) => ayah.isNotEmpty).join(' ۞ '),
     ]);
     final stepText = steps.join(' • ');
     final finalBody = body.isNotEmpty ? body : stepText.isNotEmpty ? stepText : _str(map['summary']);
