@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:material_ui/material_ui.dart';
@@ -6,9 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/widgets/noor_brand.dart';
 import '../../core/services/noor_voice.dart';
+import '../../core/services/noor_sound_service.dart';
 import '../../data/content/legacy_content.dart';
 import '../../data/providers.dart';
 import 'quran_library_screen.dart';
+import 'intro_video_screen.dart';
 
 class LegacyContentScreen extends ConsumerWidget {
   const LegacyContentScreen({super.key});
@@ -26,6 +29,24 @@ class LegacyContentScreen extends ConsumerWidget {
     ('challenges', 'تحديات وألعاب المكتبة الأصلية', '🧩'),
     ('achievements', 'الإنجازات والشارات', '🏅'),
   ];
+
+  static String _sectionArt(String id) {
+    final file = switch (id) {
+      'quran' => 'sec_quran.webp',
+      'prayer' => 'sec_prayer.webp',
+      'adhkar' => 'sec_adhkar.webp',
+      'akhlaq' => 'sec_akhlaq.webp',
+      'seerah' => 'sec_seerah.webp',
+      'figures' => 'sec_figures.webp',
+      'prophets' => 'sec_prophets.webp',
+      'learn' => 'sec_learn.webp',
+      'games' => 'pic_gamepad.webp',
+      'challenges' => 'pic_puzzle.webp',
+      'achievements' => 'sec_achievements.webp',
+      _ => 'sec_learn.webp',
+    };
+    return 'assets/content/legacy/media/art/$file';
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,8 +82,66 @@ class LegacyContentScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
                 Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            for (final art in ['nour_welcome.webp', 'fedaa_welcome.webp', 'lamaa_welcome.webp'])
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Image.asset(
+                                    'assets/content/legacy/media/art/$art',
+                                    height: 92,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) => const SizedBox(height: 92),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const Divider(),
+                        Row(
+                          children: [
+                            const Expanded(
+                              child: Text('أنشودة نور وفداء',
+                                  style: TextStyle(fontWeight: FontWeight.w800)),
+                            ),
+                            IconButton.filledTonal(
+                              tooltip: 'تشغيل الأنشودة',
+                              onPressed: () => NoorSoundService.playSong(),
+                              icon: const Icon(Icons.play_arrow_rounded),
+                            ),
+                            IconButton.filledTonal(
+                              tooltip: 'إيقاف الصوت',
+                              onPressed: () => NoorSoundService.stopMusic(),
+                              icon: const Icon(Icons.stop_rounded),
+                            ),
+                          ],
+                        ),
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: const Icon(Icons.movie_creation_outlined),
+                          title: const Text('المقدمة السينمائية'),
+                          subtitle: const Text('شاهد المقدمة الأصلية داخل التطبيق'),
+                          trailing: const Icon(Icons.chevron_left_rounded),
+                          onTap: () {
+                            unawaited(NoorSoundService.playEffect('tap.wav'));
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(builder: (_) => const IntroVideoScreen()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Card(
                   child: ListTile(
-                    leading: const CircleAvatar(child: Icon(Icons.volume_up_rounded)),
+                    leading: Image.asset('assets/content/legacy/media/art/pic_headphones.webp', width: 48, height: 48, fit: BoxFit.contain, errorBuilder: (_, __, ___) => const Icon(Icons.volume_up_rounded)),
                     title: const Text('مكتبة الصوتيات والعبارات'),
                     subtitle: const Text('الأذكار والأحاديث وعبارات نور وفداء بصوت عربي'),
                     trailing: const Icon(Icons.chevron_left_rounded),
@@ -75,13 +154,16 @@ class LegacyContentScreen extends ConsumerWidget {
                   if (section.$1 == 'quran')
                     Card(
                       child: ListTile(
-                        leading: const CircleAvatar(child: Text('📖')),
+                        leading: Image.asset(_sectionArt('quran'), width: 48, height: 48, fit: BoxFit.cover),
                         title: Text(section.$2, style: const TextStyle(fontWeight: FontWeight.w800)),
                         subtitle: const Text('فهرس السور المتاحة ونصوص الآيات'),
                         trailing: const Icon(Icons.chevron_left_rounded),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(builder: (_) => const QuranLibraryScreen()),
-                        ),
+                        onTap: () {
+                          unawaited(NoorSoundService.playEffect('tap.wav'));
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(builder: (_) => const QuranLibraryScreen()),
+                          );
+                        },
                       ),
                     )
                   else
@@ -91,7 +173,19 @@ class LegacyContentScreen extends ConsumerWidget {
                       final items = snapshot.data ?? const <LegacyContentItem>[];
                       return Card(
                         child: ExpansionTile(
-                          leading: CircleAvatar(child: Text(section.$3)),
+                          onExpansionChanged: (expanded) {
+                            if (expanded) unawaited(NoorSoundService.playEffect('tap.wav'));
+                          },
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              _sectionArt(section.$1),
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => CircleAvatar(child: Text(section.$3)),
+                            ),
+                          ),
                           title: Text(section.$2, style: const TextStyle(fontWeight: FontWeight.w800)),
                           subtitle: Text(snapshot.connectionState == ConnectionState.waiting
                               ? 'جارٍ تجهيز المحتوى...'
@@ -249,7 +343,14 @@ class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
             for (var index = 0; index < options.length; index++)
               InkWell(
                 borderRadius: BorderRadius.circular(12),
-                onTap: answered ? null : () => setState(() => _selected = index),
+                onTap: answered
+                    ? null
+                    : () {
+                        unawaited(NoorSoundService.playEffect(
+                          index == correct ? 'correct.wav' : 'tap.wav',
+                        ));
+                        setState(() => _selected = index);
+                      },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                   child: Row(
