@@ -60,6 +60,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/intro_video_screen.dart" "$PROJECT_DIR/lib/features/home/intro_video_screen.dart"
           mkdir -p "$PROJECT_DIR/lib/core/services"
           cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_sound_service.dart" "$PROJECT_DIR/lib/core/services/noor_sound_service.dart"
+          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_voice.dart" "$PROJECT_DIR/lib/core/services/noor_voice.dart"
           mkdir -p "$PROJECT_DIR/test"
           cp -a "$GITHUB_WORKSPACE/noor_upgrade/test/." "$PROJECT_DIR/test/"
           python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
