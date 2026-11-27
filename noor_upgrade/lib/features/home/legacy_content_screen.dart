@@ -492,9 +492,29 @@ class _VoicePhraseLibraryScreenState extends State<VoicePhraseLibraryScreen> {
   Future<List<Map<String, dynamic>>> _loadGroups() async {
     final raw = await rootBundle.loadString('assets/content/legacy/voice_phrases.json');
     final decoded = jsonDecode(raw) as Map<String, dynamic>;
-    return (decoded['groups'] as List)
+    final groups = (decoded['groups'] as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList(growable: true);
+
+    // The legacy learning phrase bank is a separate 3,370-entry dataset.
+    // Expose it as its own searchable TTS group rather than leaving it unused.
+    final lessonRaw = await rootBundle.loadString(
+      'assets/content/legacy/lesson_phrases.json',
+    );
+    final lessonData = jsonDecode(lessonRaw) as Map<String, dynamic>;
+    final lessonPhrases = (lessonData['phrases'] as List)
+        .whereType<String>()
+        .where((phrase) => phrase.trim().isNotEmpty)
         .toList(growable: false);
+    groups.add({
+      'id': 'lesson_phrases',
+      'title': 'عبارات الدروس والرياضيات',
+      'phrases': [
+        for (var index = 0; index < lessonPhrases.length; index++)
+          {'key': 'lesson_phrase_$index', 'text': lessonPhrases[index]},
+      ],
+    });
+    return groups;
   }
 
   @override
