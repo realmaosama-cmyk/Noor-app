@@ -13,10 +13,13 @@ if router_import not in router:
     router = router.replace(anchor, anchor + router_import, 1)
 route = "GoRoute(path: '/legacy-content', builder: (_, __) => const LegacyContentScreen()),"
 if "path: '/legacy-content'" not in router:
-    anchor = "routes: ["
-    if anchor not in router:
+    routes_at = router.find('routes:')
+    if routes_at < 0:
         raise SystemExit('Could not find the app route list')
-    router = router.replace(anchor, anchor + "\n      " + route, 1)
+    list_at = router.find('[', routes_at)
+    if list_at < 0:
+        raise SystemExit('Could not find the route list opening bracket')
+    router = router[:list_at + 1] + "\\n      " + route + router[list_at + 1:]
 router_path.write_text(router, encoding='utf-8')
 
 home_path = root / 'lib/features/home/home_screen.dart'
