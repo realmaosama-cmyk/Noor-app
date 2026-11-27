@@ -182,15 +182,21 @@ class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
           children: [
             Text('$prompt', textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.w800, height: 1.5)),
-            for (var index = 0; index < options.length; index++)
-              RadioListTile<int>(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                value: index,
-                groupValue: _selected,
-                onChanged: answered ? null : (value) => setState(() => _selected = value),
-                title: Text(options[index], textAlign: TextAlign.right),
+            RadioGroup<int>(
+              groupValue: _selected,
+              onChanged: answered ? null : (value) => setState(() => _selected = value),
+              child: Column(
+                children: [
+                  for (var index = 0; index < options.length; index++)
+                    RadioListTile<int>(
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      value: index,
+                      title: Text(options[index], textAlign: TextAlign.right),
+                    ),
+                ],
               ),
+            ),
             if (answered)
               Text(
                 isCorrect
