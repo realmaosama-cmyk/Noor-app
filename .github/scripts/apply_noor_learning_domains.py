@@ -28,9 +28,11 @@ if "learning_domains.dart" not in h:
     h = h.replace("import '../../data/content/daily_content.dart';",
       "import '../../data/content/daily_content.dart';\nimport '../../data/content/learning_domains.dart';")
 if "اختر طريق رحلتك" not in h:
-    start = h.find("                    NoorEntrance(\n                        delay: 1,\n                        child: Row(children: [\n                          Expanded(\n                              child: Text('خريطة مغامرتك'")
-    end = h.find('                    const SizedBox(height: 19),', start)
-    if start < 0 or end < 0: raise SystemExit("Original home grid anchor not found")
+    title_at = h.find('خريطة مغامرتك')
+    if title_at < 0: title_at = h.find('GridView.builder(')
+    start = h.rfind('                    NoorEntrance(', 0, title_at)
+    end = h.find('                    const SizedBox(height: 19),', title_at)
+    if title_at < 0 or start < 0 or end < 0: raise SystemExit("Original home-world section not found safely")
     replacement = """                    NoorEntrance(delay: 1, child: Row(children: [
                       Expanded(child: Text('اختر طريق رحلتك', style: Theme.of(context).textTheme.titleLarge)),
                       Text('${visible.length} مجالًا', style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.w800)),
