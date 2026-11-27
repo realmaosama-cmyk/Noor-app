@@ -126,7 +126,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
                           value: questions.isEmpty ? 0 : answered / questions.length,
                         ),
                         const SizedBox(height: 5),
-                        Text('$answered من \${questions.length} سؤال تمت الإجابة عنه',
+                        Text('$answered من ${questions.length} سؤال تمت الإجابة عنه',
                             textAlign: TextAlign.right),
                       ],
                     ),
@@ -163,7 +163,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
                         children: [
                           const Icon(Icons.auto_awesome_rounded, size: 36),
                           const SizedBox(height: 8),
-                          Text('إجابات صحيحة: $correct من \${questions.length}',
+                          Text('إجابات صحيحة: $correct من ${questions.length}',
                               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
                           const SizedBox(height: 6),
                           const Text(
@@ -226,7 +226,7 @@ class _LevelQuestionCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('سؤال $index • \${question['text']}',
+            Text('سؤال $index • ${question['text']}',
                 textAlign: TextAlign.right,
                 style: const TextStyle(fontWeight: FontWeight.w800, height: 1.6)),
             for (var i = 0; i < options.length; i++)
@@ -244,7 +244,7 @@ class _LevelQuestionCard extends StatelessWidget {
               Text(
                 selected == answer
                     ? 'أحسنت، إجابة صحيحة'
-                    : 'الإجابة الصحيحة: \${options[answer]}',
+                    : 'الإجابة الصحيحة: ${options[answer]}',
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   color: selected == answer
@@ -254,7 +254,7 @@ class _LevelQuestionCard extends StatelessWidget {
                 ),
               ),
             if ((question['source'] ?? '').toString().isNotEmpty)
-              Text('مرجع للمراجعة: \${question['source']}',
+              Text('مرجع للمراجعة: ${question['source']}',
                   textAlign: TextAlign.right,
                   style: Theme.of(context).textTheme.bodySmall),
           ],
