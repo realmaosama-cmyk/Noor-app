@@ -24,7 +24,7 @@ def norm(value):
 def records(data):
     if isinstance(data, dict):
         found = False
-        for key in ("lessons", "hadiths", "games", "surahs", "ayat", "verses", "challenges"):
+        for key in ("lessons", "hadiths", "games", "surahs", "ayat", "verses", "challenges", "questions", "phrases"):
             value = data.get(key)
             if isinstance(value, list):
                 found = True
@@ -181,6 +181,67 @@ else:
         errors.append(f"media/: expected 172 migrated files, found {len(all_media)}")
     if any(path.stat().st_size <= 0 for path in all_media):
         errors.append("media/: empty or zero-byte media asset detected")
+
+# Validate the 24-week curriculum index and every lesson reference it exposes.
+content_ids = set()
+for path in ALL_JSON:
+    if path.name == "curriculum.json":
+        continue
+    try:
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
+        for record in records(data):
+            record_id = record.get("id")
+            if isinstance(record_id, str) and record_id.strip():
+                content_ids.add(record_id)
+    except Exception:
+        pass
+
+curriculum_path = ROOT / "curriculum.json"
+try:
+    curriculum = json.loads(curriculum_path.read_text(encoding="utf-8"))
+    weeks = curriculum.get("weeks", [])
+    if len(weeks) != 24:
+        errors.append(f"curriculum.json: expected 24 weeks, found {len(weeks)}")
+    for week in weeks:
+        week_number = week.get("week")
+        days = week.get("days", [])
+        if len(days) != 5:
+            errors.append(f"curriculum.json: week {week_number} should contain 5 days")
+        for day in days:
+            lesson_ids = day.get("lessons", [])
+            early_ids = day.get("earlyLessons", [])
+            if not isinstance(lesson_ids, list) or not isinstance(early_ids, list):
+                errors.append(f"curriculum.json: invalid lesson lists in week {week_number}, day {day.get('day')}")
+                continue
+            if not lesson_ids or not early_ids:
+                errors.append(f"curriculum.json: empty learning path in week {week_number}, day {day.get('day')}")
+            for lesson_id in lesson_ids + early_ids:
+                if lesson_id not in content_ids:
+                    errors.append(f"curriculum.json: unresolved lesson id {lesson_id} in week {week_number}, day {day.get('day')}")
+except Exception as exc:
+    errors.append(f"curriculum.json: unable to validate 24-week index: {exc}")
+
+# The three original level-check banks are now consumed by the in-app review screen.
+for filename in ("atfal.json", "nashia.json", "murahiqun.json"):
+    path = ROOT / "levelcheck" / filename
+    try:
+        bank = json.loads(path.read_text(encoding="utf-8"))
+        questions = bank.get("questions", [])
+        if len(questions) != 12:
+            errors.append(f"levelcheck/{filename}: expected 12 questions, found {len(questions)}")
+        if bank.get("content_verified") is not False:
+            errors.append(f"levelcheck/{filename}: content_verified must remain false until human review")
+        for index, question in enumerate(questions, 1):
+            options = question.get("options")
+            answer = question.get("answer")
+            if not isinstance(question.get("text"), str) or not question["text"].strip():
+                errors.append(f"levelcheck/{filename} question {index}: missing prompt")
+            if not isinstance(options, list) or len(options) < 2 or type(answer) is not int or not 0 <= answer < len(options):
+                errors.append(f"levelcheck/{filename} question {index}: invalid options or answer index")
+            if not isinstance(question.get("source"), str) or not question["source"].strip():
+                errors.append(f"levelcheck/{filename} question {index}: missing source note")
+    except Exception as exc:
+        errors.append(f"levelcheck/{filename}: unable to validate question bank: {exc}")
 
 # The Quran is a strict integrity gate, not an optional legacy pack.
 quran_path = ROOT / "quran_surahs.json"
