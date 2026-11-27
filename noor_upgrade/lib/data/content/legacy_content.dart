@@ -165,10 +165,12 @@ class LegacyContentRepository {
             final options = step['options'];
             final answer = step['answerIndex'] ?? step['answer'];
             if (options is List && options.length >= 2 && answer is num) {
+              final instruction = _first([step['label'], step['instruction'], step['text']]);
+              if (instruction.isNotEmpty) steps.add(instruction);
               questions.add({
                 'question': _first([step['question'], step['prompt'], step['text'], step['label']]),
                 'options': options,
-                'answerIndex': answer,
+                'answerIndex': answer.toInt(),
                 'hint': _first([step['hint'], step['feedback']]),
                 'praise': _first([step['praise'], step['rewardText']]),
               });
