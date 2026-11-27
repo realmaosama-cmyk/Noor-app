@@ -78,7 +78,7 @@ void main() {
       );
 
       expect(items, hasLength(1));
-      expect(items.single.steps, ['استمع جيدًا', 'اختر الصورة', 'أحسنت، راجع إجابتك']);
+      expect(items.single.steps, ['استمع جيدًا', 'أحسنت، راجع إجابتك']);
       expect(items.single.questions, hasLength(2));
       expect(items.single.questions.first['answerIndex'], 0);
     });
