@@ -37,7 +37,7 @@ class LegacyContentRepository {
       .toList(growable: false);
 
   static final Map<String, List<String>> _files = {
-    'quran': ['noor_quran.json', ..._weeks, 'quran_lessons.json', 'section_ayat_lessons.json', 'section_ayat.json', 'quran_surahs.json'],
+    'quran': ['noor_quran.json', ..._weeks, 'quran_lessons.json', 'section_ayat_lessons.json', 'section_ayat.json'],
     'prayer': ['noor_prayer.json', 'prayer_hadith.json', 'lessons/a_salah_five.json', 'lessons/a_salah_rakat.json', ..._weeks],
     'adhkar': ['noor_adhkar.json', ..._weeks, 'adhkar_hadith.json', 'hadith_lessons.json', 'lessons/t_adab_after_meal.json', 'lessons/t_adab_food.json', 'lessons/t_adab_greet.json', 'lessons/t_adab_sleep.json', 'lessons/t_adab_sneeze.json'],
     'akhlaq': ['noor_akhlaq.json', ..._weeks, 'akhlaq_hadith.json', 'hadith_lessons.json', 'lessons/t_akhlaq_kind_word.json', 'lessons/t_akhlaq_share.json', 'lessons/t_akhlaq_thanks.json', 'lessons/t_akhlaq_tidy.json'],
