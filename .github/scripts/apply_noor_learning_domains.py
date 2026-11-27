@@ -18,8 +18,8 @@ r = router.read_text(encoding="utf-8")
 if "learning_domain_screen.dart" not in r:
     r = r.replace("import '../../features/home/letter_builder_game_screen.dart';",
       "import '../../features/home/letter_builder_game_screen.dart';\nimport '../../features/home/learning_domain_screen.dart';\nimport '../../features/home/quran_library_screen.dart';")
-routes_at = r.find("routes: [")
-list_at = r.find("[", routes_at) if routes_at >= 0 else -1
+router_at = r.find("GoRouter(")
+list_at = r.find("[", router_at) if router_at >= 0 else -1
 if list_at < 0: raise SystemExit("Could not locate GoRouter route list")
 new_routes = []
 if "LearningDomainScreen(" not in r:
