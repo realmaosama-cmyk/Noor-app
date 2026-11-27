@@ -96,14 +96,7 @@ logo_svg = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" role
   <text x="255" y="197" fill="#55717D" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="3">LEARN • GROW • SHINE</text>
 </svg>'''
 (root / 'assets/branding/noor-logo.svg').write_text(logo_svg, encoding='utf-8')
-,
-        'dependencies:\\n  video_player: ^2.9.1',
-        pubspec,
-        count=1,
-    )
-    if count != 1:
-        raise SystemExit('Could not add video_player to pubspec dependencies')
-pubspec_path.write_text(pubspec, encoding='utf-8')
+
 
 branding_path = root / 'tool/configure_android_branding.sh'
 branding = branding_path.read_text(encoding='utf-8')
