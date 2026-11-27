@@ -15,7 +15,11 @@
         "أردد ما أستطيع مع ولي الأمر.",
         "أشير إلى اسم السورة في المصحف."
       ],
-      "source": "القرآن الكريم: سورتا الإخلاص والفلق"
+      "source": "القرآن الكريم: سورتا الإخلاص والفلق",
+      "category": "quran",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nq_002",
@@ -30,7 +34,11 @@
         "حدد الكلمات التي تحتاج إلى شرح.",
         "اكتب أو ارسم عملاً صالحاً تقوم به اليوم."
       ],
-      "source": "القرآن الكريم: سورة العصر، الآيات 1–3"
+      "source": "القرآن الكريم: سورة العصر، الآيات 1–3",
+      "category": "quran",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nq_003",
@@ -45,7 +53,11 @@
         "دوّن ملاحظة عن السماء أو النبات أو الماء.",
         "اكتب نعمة واحدة وكيف تشكر الله عليها."
       ],
-      "source": "القرآن الكريم: آل عمران 190–191"
+      "source": "القرآن الكريم: آل عمران 190–191",
+      "category": "quran",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nq_004",
@@ -60,7 +72,11 @@
         "لاحظ الفرق في النطق.",
         "كرر المثال بعد المعلم."
       ],
-      "source": "تعليم تجويد شفهي على يد معلم مؤهل"
+      "source": "تعليم تجويد شفهي على يد معلم مؤهل",
+      "category": "quran",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nq_005",
@@ -75,7 +91,11 @@
         "سمّع ما تتذكره.",
         "راجع مواضع الخطأ مع مصحف موثوق."
       ],
-      "source": "نشاط مراجعة قرآنية؛ المصحف المعتمد"
+      "source": "نشاط مراجعة قرآنية؛ المصحف المعتمد",
+      "category": "quran",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nq_006",
@@ -90,7 +110,11 @@
         "استمع دون مقاطعة.",
         "اطلب المساعدة عند القراءة."
       ],
-      "source": "آداب تعليمية بإشراف الأسرة"
+      "source": "آداب تعليمية بإشراف الأسرة",
+      "category": "quran",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     }
   ]
 }
