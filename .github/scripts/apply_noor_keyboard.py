@@ -192,6 +192,7 @@ relative_widget = os.path.relpath(widget, path.parent).replace(os.sep, "/")
 if not relative_widget.startswith("."):
     relative_widget = "./" + relative_widget
 source = add_import(source, f"import '{relative_widget}';")
+source = add_import(source, "import 'package:flutter/material.dart';")
 
 # Re-find the chosen field after import insertion.
 field_match = None
