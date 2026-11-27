@@ -172,8 +172,8 @@ class LegacyContentRepository {
                 'hint': _first([step['hint'], step['feedback']]),
                 'praise': _first([step['praise'], step['rewardText']]),
               });
+              continue;
             }
-            continue;
           }
           final stepText = _first([
             step['text'], step['instruction'], step['label'], step['title'],
