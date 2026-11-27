@@ -16,9 +16,12 @@ class LegacyContentItem {
     this.week = 0,
     this.difficulty = '',
     this.category = '',
+    this.contentVerified = false,
+    this.reviewStatus = 'pending',
   });
 
-  final String id, title, emoji, summary, body, source, difficulty, category;
+  final String id, title, emoji, summary, body, source, difficulty, category, reviewStatus;
+  final bool contentVerified;
   final int minAge, maxAge, week;
   final List<String> steps;
   final List<Map<String, dynamic>> questions;
@@ -190,6 +193,8 @@ class LegacyContentRepository {
       week: int.tryParse(weekMatch?.group(1) ?? '') ?? _num(map['week'], 0),
       difficulty: _str(map['difficulty']),
       category: _str(map['category']),
+      contentVerified: map['content_verified'] == true,
+      reviewStatus: _str(map['review_status']).isEmpty ? 'pending' : _str(map['review_status']),
     );
   }
 
