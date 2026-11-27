@@ -166,19 +166,36 @@ class LegacyContentScreen extends ConsumerWidget {
                 ),
                 for (final section in _sections)
                   if (section.$1 == 'quran')
-                    Card(
-                      child: ListTile(
-                        leading: Image.asset(_sectionArt('quran'), width: 48, height: 48, fit: BoxFit.cover),
-                        title: Text(section.$2, style: const TextStyle(fontWeight: FontWeight.w800)),
-                        subtitle: const Text('فهرس السور المتاحة ونصوص الآيات'),
-                        trailing: const Icon(Icons.chevron_left_rounded),
-                        onTap: () {
-                          unawaited(NoorSoundService.playEffect('tap.wav'));
-                          Navigator.of(context).push(
-                            MaterialPageRoute<void>(builder: (_) => const QuranLibraryScreen()),
-                          );
-                        },
-                      ),
+                    Column(
+                      children: [
+                        Card(
+                          child: ListTile(
+                            leading: Image.asset(_sectionArt('quran'), width: 48, height: 48, fit: BoxFit.cover),
+                            title: Text(section.$2, style: const TextStyle(fontWeight: FontWeight.w800)),
+                            subtitle: const Text('فهرس المصحف الكامل: 114 سورة و6,236 آية'),
+                            trailing: const Icon(Icons.chevron_left_rounded),
+                            onTap: () {
+                              unawaited(NoorSoundService.playEffect('tap.wav'));
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(builder: (_) => const QuranLibraryScreen()),
+                              );
+                            },
+                          ),
+                        ),
+                        Card(
+                          child: ListTile(
+                            leading: const CircleAvatar(child: Icon(Icons.menu_book_rounded)),
+                            title: const Text('دروس القرآن والتدبر'),
+                            subtitle: const Text('مواد تعليمية وأسئلة مناسبة للعمر'),
+                            trailing: const Icon(Icons.chevron_left_rounded),
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => QuranLearningScreen(age: learner.age),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     )
                   else
                     FutureBuilder<List<LegacyContentItem>>(
@@ -608,6 +625,119 @@ class _VoicePhraseLibraryScreenState extends State<VoicePhraseLibraryScreen> {
                     },
                   ),
                 ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+
+class QuranLearningScreen extends StatelessWidget {
+  const QuranLearningScreen({super.key, required this.age});
+  final int age;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('دروس القرآن والتدبر')),
+      body: NoorPageBackground(
+        asset: 'assets/branding/noor-bg-ocean.webp',
+        child: FutureBuilder<List<LegacyContentItem>>(
+          future: LegacyContentRepository.loadForSection('quran', age),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return const Center(child: Text('تعذر تحميل دروس القرآن'));
+            }
+            final items = snapshot.data ?? const <LegacyContentItem>[];
+            if (items.isEmpty) {
+              return const Center(child: Text('لا توجد دروس مناسبة لهذه المرحلة حاليًا'));
+            }
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Text(
+                      'نتعلم القرآن بالمحبة والتدرج، ونراجع التلاوة مع ولي الأمر أو معلم متقن.',
+                      textAlign: TextAlign.right,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                ),
+                for (final item in items)
+                  Card(
+                    child: ExpansionTile(
+                      leading: Text(item.emoji, style: const TextStyle(fontSize: 24)),
+                      title: Text(item.title, textAlign: TextAlign.right),
+                      subtitle: Text(item.summary, textAlign: TextAlign.right,
+                          maxLines: 2, overflow: TextOverflow.ellipsis),
+                      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      children: [
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Text(item.body,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(fontSize: 16, height: 1.8)),
+                        ),
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: TextButton.icon(
+                            onPressed: () async {
+                              try {
+                                await NoorVoice.speak('${item.title}. ${item.body}');
+                              } catch (_) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('تعذر تشغيل الصوت العربي على هذا الجهاز')),
+                                  );
+                                }
+                              }
+                            },
+                            icon: const Icon(Icons.volume_up_rounded),
+                            label: const Text('استمع للدرس'),
+                          ),
+                        ),
+                        if (item.steps.isNotEmpty)
+                          for (var i = 0; i < item.steps.length; i++)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(radius: 11, child: Text('${i + 1}')),
+                                  const SizedBox(width: 8),
+                                  Expanded(child: Text(item.steps[i],
+                                      textAlign: TextAlign.right)),
+                                ],
+                              ),
+                            ),
+                        for (final question in item.questions)
+                          _LegacyQuestionCard(question: question),
+                        if (item.source.isNotEmpty)
+                          Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: Text('المصدر: ${item.source}',
+                                textAlign: TextAlign.right,
+                                style: Theme.of(context).textTheme.bodySmall),
+                          ),
+                        if (!item.contentVerified)
+                          const Padding(
+                            padding: EdgeInsets.only(top: 8),
+                            child: Text(
+                              'مادة تعليمية قيد المراجعة؛ راجع ولي الأمر أو المعلم المختص مصادرها.',
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
               ],
             );
           },
