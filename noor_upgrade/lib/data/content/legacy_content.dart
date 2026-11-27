@@ -34,13 +34,13 @@ class LegacyContentRepository {
       .toList(growable: false);
 
   static final Map<String, List<String>> _files = {
-    'quran': ['noor_quran.json', 'quran_lessons.json', 'section_ayat_lessons.json', 'section_ayat.json', 'quran_surahs.json'],
+    'quran': [..._weeks, 'noor_quran.json', 'quran_lessons.json', 'section_ayat_lessons.json', 'section_ayat.json', 'quran_surahs.json'],
     'prayer': ['noor_prayer.json', 'prayer_hadith.json', 'lessons/a_salah_five.json', 'lessons/a_salah_rakat.json', ..._weeks],
-    'adhkar': ['noor_adhkar.json', 'adhkar_hadith.json', 'hadith_lessons.json', 'lessons/t_adab_after_meal.json', 'lessons/t_adab_food.json', 'lessons/t_adab_greet.json', 'lessons/t_adab_sleep.json', 'lessons/t_adab_sneeze.json'],
-    'akhlaq': ['noor_akhlaq.json', 'akhlaq_hadith.json', 'hadith_lessons.json', 'lessons/t_akhlaq_kind_word.json', 'lessons/t_akhlaq_share.json', 'lessons/t_akhlaq_thanks.json', 'lessons/t_akhlaq_tidy.json'],
-    'seerah': ['noor_seerah.json', 'seerah_hadith.json', 'hadith_lessons.json'],
-    'figures': ['noor_figures.json', 'figures_hadith.json', 'hadith_lessons.json'],
-    'prophets': ['noor_prophets.json', 'prophets_lessons.json', 'prophets_ayat.json'],
+    'adhkar': [..._weeks, 'noor_adhkar.json', 'adhkar_hadith.json', 'hadith_lessons.json', 'lessons/t_adab_after_meal.json', 'lessons/t_adab_food.json', 'lessons/t_adab_greet.json', 'lessons/t_adab_sleep.json', 'lessons/t_adab_sneeze.json'],
+    'akhlaq': [..._weeks, 'noor_akhlaq.json', 'akhlaq_hadith.json', 'hadith_lessons.json', 'lessons/t_akhlaq_kind_word.json', 'lessons/t_akhlaq_share.json', 'lessons/t_akhlaq_thanks.json', 'lessons/t_akhlaq_tidy.json'],
+    'seerah': [..._weeks, 'noor_seerah.json', 'seerah_hadith.json', 'hadith_lessons.json'],
+    'figures': [..._weeks, 'noor_figures.json', 'figures_hadith.json', 'hadith_lessons.json'],
+    'prophets': [..._weeks, 'noor_prophets.json', 'prophets_lessons.json', 'prophets_ayat.json'],
     'learn': ['learn_lessons.json', 'nour_more_lessons.json', ..._weeks, 'lessons/a_arabic_letters_1.json', 'lessons/a_arabic_letters_2.json', 'lessons/a_arabic_letters_3.json', 'lessons/a_arabic_letters_4.json', 'lessons/a_arabic_letters_5.json', 'lessons/a_arabic_letters_6.json', 'lessons/a_arabic_letters_7.json'],
     'challenges': ['games.json'],
     'games': ['noor_games.json', 'games.json'],
@@ -89,7 +89,7 @@ class LegacyContentRepository {
           if (item == null || !item.suitableFor(age) || !_belongsToSection(item, sectionId, file)) continue;
           final titleKey = _normalize(item.title);
           final ageKey = '${item.minAge}-${item.maxAge}';
-          final duplicateKey = '$titleKey|$ageKey';
+          final duplicateKey = titleKey;
           if (seenIds.contains(item.id) || seenTitles.contains(duplicateKey)) continue;
           seenIds.add(item.id);
           seenTitles.add(duplicateKey);
@@ -118,7 +118,7 @@ class LegacyContentRepository {
       return false;
     }
     // Legacy files without category metadata retain their explicit file assignment.
-    if (file.startsWith('week')) return section == 'learn' || section == 'prayer';
+    if (file.startsWith('week')) return section == 'learn';
     if (file == 'hadith_lessons.json') return section == 'adhkar' || section == 'akhlaq' || section == 'seerah' || section == 'figures' || section == 'prayer';
     return true;
   }
