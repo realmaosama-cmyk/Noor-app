@@ -101,6 +101,8 @@ jobs:
           fi
           chmod +x tool/configure_android_branding.sh
           ./tool/configure_android_branding.sh
+          grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml
+          grep -q "android.intent.action.TTS_SERVICE" android/app/src/main/AndroidManifest.xml
 
       - name: Verify signing secrets and configure release signing
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
