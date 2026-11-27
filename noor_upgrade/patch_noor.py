@@ -12,12 +12,15 @@ if import_line not in section:
     if anchor not in section:
         raise SystemExit('Could not find catalog import in section_screen.dart')
     section = section.replace(anchor, anchor + import_line, 1)
-old_tail = """                          })
-                  ]);"""
-new_tail = """                          }),
+if "LegacyContentRepository.loadForSection" not in section:
+    insertion = section.find('if (lessons.isEmpty)')
+    if insertion < 0:
+        insertion = section.find('for (final lesson in lessons)')
+    if insertion < 0:
+        raise SystemExit('Could not locate the section lesson list in section_screen.dart')
+    widget = r'''
                     FutureBuilder<List<LegacyContentItem>>(
-                        future: LegacyContentRepository.loadForSection(
-                            section.id, c.age),
+                        future: LegacyContentRepository.loadForSection(section.id, c.age),
                         builder: (context, snapshot) {
                           final items = snapshot.data ?? const <LegacyContentItem>[];
                           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -32,46 +35,27 @@ new_tail = """                          }),
                                 const Padding(
                                     padding: EdgeInsets.only(top: 22, bottom: 10),
                                     child: Text('من مكتبة نور وفداء',
-                                        style: TextStyle(
-                                            fontSize: 19,
-                                            fontWeight: FontWeight.w900))),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900))),
                                 for (final item in items)
                                   Card(
                                       child: ExpansionTile(
-                                          leading: CircleAvatar(
-                                              child: Text(item.emoji,
-                                                  style: const TextStyle(fontSize: 19))),
-                                          title: Text(item.title,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w800)),
-                                          subtitle: Text(item.summary,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis),
-                                          childrenPadding:
-                                              const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                          leading: CircleAvatar(child: Text(item.emoji)),
+                                          title: Text(item.title),
+                                          subtitle: Text(item.summary, maxLines: 2, overflow: TextOverflow.ellipsis),
+                                          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                                           children: [
-                                            Align(
-                                                alignment: Alignment.centerRight,
-                                                child: Text(item.body,
-                                                    style: const TextStyle(
-                                                        fontSize: 16, height: 1.7))),
+                                            Align(alignment: Alignment.centerRight,
+                                                child: Text(item.body, style: const TextStyle(fontSize: 16, height: 1.7))),
                                             if (item.source.isNotEmpty) ...[
                                               const SizedBox(height: 10),
-                                              Align(
-                                                  alignment: Alignment.centerRight,
-                                                  child: Text('المصدر: ${item.source}',
-                                                      style: const TextStyle(
-                                                          fontSize: 11,
-                                                          color: Colors.grey)))
+                                              Align(alignment: Alignment.centerRight,
+                                                  child: Text('المصدر: ${item.source}', style: const TextStyle(fontSize: 11, color: Colors.grey)))
                                             ]
                                           ]))
                               ]);
-                        })
-                  ]);"""
-if old_tail in section:
-    section = section.replace(old_tail, new_tail, 1)
-elif "LegacyContentRepository.loadForSection" not in section:
-    raise SystemExit('Could not locate section lesson list insertion point')
+                        }),
+'''
+    section = section[:insertion] + widget + section[insertion:]
 section_path.write_text(section, encoding='utf-8')
 
 # Add nested legacy content directories to Flutter's asset manifest.
