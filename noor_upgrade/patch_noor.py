@@ -19,7 +19,7 @@ if "path: '/legacy-content'" not in router:
     list_at = router.find('[', routes_at)
     if list_at < 0:
         raise SystemExit('Could not find the route list opening bracket')
-    router = router[:list_at + 1] + "\\n      " + route + router[list_at + 1:]
+    router = router[:list_at + 1] + chr(10) + "      " + route + router[list_at + 1:]
 router_path.write_text(router, encoding='utf-8')
 
 home_path = root / 'lib/features/home/home_screen.dart'
