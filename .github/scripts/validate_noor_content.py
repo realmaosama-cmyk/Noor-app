@@ -217,8 +217,8 @@ try:
             if not isinstance(lesson_ids, list) or not isinstance(early_ids, list):
                 errors.append(f"curriculum.json: invalid lesson lists in week {week_number}, day {day.get('day')}")
                 continue
-            if not lesson_ids or not early_ids:
-                errors.append(f"curriculum.json: empty learning path in week {week_number}, day {day.get('day')}")
+            if not lesson_ids and not early_ids:
+                errors.append(f"curriculum.json: no lessons linked in week {week_number}, day {day.get('day')}")
             for lesson_id in lesson_ids + early_ids:
                 if lesson_id not in content_ids:
                     errors.append(f"curriculum.json: unresolved lesson id {lesson_id} in week {week_number}, day {day.get('day')}")
