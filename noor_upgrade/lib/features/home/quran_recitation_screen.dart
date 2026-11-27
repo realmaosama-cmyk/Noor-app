@@ -42,6 +42,7 @@ class _QuranRecitationScreenState extends State<QuranRecitationScreen> {
   void initState() {
     super.initState();
     _playerSubscription = _player.playerStateStream.listen((state) {
+      if (mounted) setState(() {});
       if (state.processingState == ProcessingState.completed && _autoAdvance) {
         _moveAyah(1, autoplay: true);
       }
@@ -102,6 +103,7 @@ class _QuranRecitationScreenState extends State<QuranRecitationScreen> {
       nextSurah = previous['surahNumber'] as int;
       nextAyah = previous['ayahCount'] as int;
     }
+    await _player.stop();
     if (!mounted) return;
     setState(() {
       _surahNumber = nextSurah;
