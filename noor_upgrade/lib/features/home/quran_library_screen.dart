@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../../core/widgets/noor_brand.dart';
 
@@ -31,6 +33,15 @@ class _QuranLibraryScreenState extends State<QuranLibraryScreen> {
         .toList()
       ..sort((a, b) => (a['surahNumber'] as int)
           .compareTo(b['surahNumber'] as int));
+    final totalAyahs = values.fold<int>(
+      0,
+      (total, surah) => total + (surah['ayahCount'] as int),
+    );
+    if (values.length != 114 || totalAyahs != 6236) {
+      throw StateError(
+        'Quran dataset incomplete: ${values.length} surahs / $totalAyahs ayahs',
+      );
+    }
     return values;
   }
 
@@ -153,7 +164,7 @@ class _QuranLibraryScreenState extends State<QuranLibraryScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 4, 16, 14),
                   child: Text(
-                    'نص القرآن: Tanzil Project (Uthmani). تنبيه: بيانات المصدر الحالية تضم 58 سورة فقط (الفاتحة والسور 58–114)، ولا تشمل السور 2–57. لن نعرضها كمصحف كامل حتى نستكمل نصًا موثقًا.',
+                    'نص عثماني كامل من مشروع تنزيل (Tanzil): 114 سورة و6,236 آية. التلاوة الصوتية تحتاج اتصالًا بالإنترنت.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
@@ -167,20 +178,117 @@ class _QuranLibraryScreenState extends State<QuranLibraryScreen> {
   }
 }
 
-class QuranSurahDetailScreen extends StatelessWidget {
+class QuranSurahDetailScreen extends StatefulWidget {
   const QuranSurahDetailScreen({super.key, required this.surah});
   final Map<String, dynamic> surah;
 
   @override
-  Widget build(BuildContext context) {
-    final name = surah['name'] as String;
-    final number = surah['surahNumber'] as int;
-    final ayahs = (surah['ayahs'] as List)
-        .map((item) => Map<String, dynamic>.from(item as Map))
-        .toList();
+  State<QuranSurahDetailScreen> createState() => _QuranSurahDetailScreenState();
+}
 
+class _QuranSurahDetailScreenState extends State<QuranSurahDetailScreen> {
+  final AudioPlayer _player = AudioPlayer();
+  StreamSubscription<PlayerState>? _playerSubscription;
+  int _currentIndex = 0;
+  bool _playingAll = false;
+  bool _loadingAudio = false;
+  String? _audioError;
+
+  String get _name => widget.surah['name'] as String;
+  int get _number => widget.surah['surahNumber'] as int;
+  List<Map<String, dynamic>> get _ayahs => (widget.surah['ayahs'] as List)
+      .map((item) => Map<String, dynamic>.from(item as Map))
+      .toList(growable: false);
+
+  @override
+  void initState() {
+    super.initState();
+    _playerSubscription = _player.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed && _playingAll) {
+        _playAyahAt(_currentIndex + 1);
+      }
+    });
+  }
+
+  Future<void> _toggleAudio() async {
+    if (_loadingAudio) return;
+    if (_playingAll && _player.playing) {
+      await _player.pause();
+      if (mounted) setState(() {});
+      return;
+    }
+    if (_playingAll && !_player.playing) {
+      unawaited(_player.play());
+      if (mounted) setState(() {});
+      return;
+    }
+    setState(() {
+      _playingAll = true;
+      _audioError = null;
+      _currentIndex = 0;
+    });
+    await _playAyahAt(0);
+  }
+
+  Future<void> _playAyahAt(int index) async {
+    if (!mounted || !_playingAll) return;
+    if (index >= _ayahs.length) {
+      setState(() {
+        _playingAll = false;
+        _loadingAudio = false;
+        _currentIndex = 0;
+      });
+      await _player.stop();
+      return;
+    }
+    final ayahNumber = _ayahs[index]['number'] as int;
+    final surahCode = _number.toString().padLeft(3, '0');
+    final ayahCode = ayahNumber.toString().padLeft(3, '0');
+    final url = 'https://everyayah.com/data/Alafasy_128kbps/$surahCode$ayahCode.mp3';
+    setState(() {
+      _currentIndex = index;
+      _loadingAudio = true;
+      _audioError = null;
+    });
+    try {
+      await _player.setUrl(url);
+      if (!mounted || !_playingAll) return;
+      setState(() => _loadingAudio = false);
+      unawaited(_player.play());
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _playingAll = false;
+        _loadingAudio = false;
+        _audioError = 'تعذر تشغيل التلاوة. تحقق من اتصال الإنترنت ثم حاول مرة أخرى.';
+      });
+      await _player.stop();
+    }
+  }
+
+  Future<void> _stopAudio() async {
+    setState(() {
+      _playingAll = false;
+      _loadingAudio = false;
+      _currentIndex = 0;
+      _audioError = null;
+    });
+    await _player.stop();
+  }
+
+  @override
+  void dispose() {
+    _playerSubscription?.cancel();
+    _player.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ayahs = _ayahs;
+    final progress = ayahs.isEmpty ? 0.0 : (_currentIndex + 1) / ayahs.length;
     return Scaffold(
-      appBar: AppBar(title: Text('سورة $name'), centerTitle: true),
+      appBar: AppBar(title: Text('سورة $_name'), centerTitle: true),
       body: NoorPageBackground(
         asset: 'assets/branding/noor-bg-ocean.webp',
         child: ListView(
@@ -191,10 +299,44 @@ class QuranSurahDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(18),
                 child: Column(
                   children: [
-                    Text('سورة $name',
+                    Text('سورة $_name',
                         style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w900)),
                     const SizedBox(height: 5),
-                    Text('السورة رقم $number • ${ayahs.length} آية'),
+                    Text('السورة رقم $_number • ${ayahs.length} آية'),
+                    const SizedBox(height: 14),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FilledButton.icon(
+                          onPressed: _loadingAudio ? null : _toggleAudio,
+                          icon: Icon(_player.playing ? Icons.pause_rounded : Icons.play_arrow_rounded),
+                          label: Text(_loadingAudio ? 'جارٍ التحميل…' : _player.playing ? 'إيقاف مؤقت' : 'استمع للسورة كاملة'),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton.filledTonal(
+                          tooltip: 'إيقاف التلاوة',
+                          onPressed: _stopAudio,
+                          icon: const Icon(Icons.stop_rounded),
+                        ),
+                      ],
+                    ),
+                    if (_playingAll) ...[
+                      const SizedBox(height: 8),
+                      LinearProgressIndicator(value: progress),
+                      const SizedBox(height: 5),
+                      Text('الآية ${_currentIndex + 1} من ${ayahs.length}'),
+                    ],
+                    if (_audioError != null) ...[
+                      const SizedBox(height: 8),
+                      Text(_audioError!, textAlign: TextAlign.center,
+                          style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                    ],
+                    const SizedBox(height: 5),
+                    Text(
+                      'تلاوة مشاري العفاسي • EveryAyah • يلزم اتصال بالإنترنت',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                   ],
                 ),
               ),
@@ -213,7 +355,7 @@ class QuranSurahDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             const Text(
-              'المصدر: Tanzil Quran Text (Uthmani). يُعرض النص كما ورد في المصدر دون تعديل.',
+              'نص القرآن: Tanzil Project (Uthmani). يُعرض النص كما ورد في المصدر دون تعديل.',
               textAlign: TextAlign.center,
             ),
           ],
