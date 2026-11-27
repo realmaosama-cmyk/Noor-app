@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: noor-android-${{ github.ref }}
@@ -18,64 +18,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Checkout repository branch
+      - name: Checkout repository
         uses: actions/checkout@v7
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Extract latest NOOR source archive and apply full upgrade
+      - name: Extract the complete NOOR source archive
         shell: bash
         run: |
           set -euo pipefail
-          test -f "$GITHUB_WORKSPACE/NOOR_Source.zip"
-          mkdir -p "$RUNNER_TEMP/noor-extracted"
-          unzip -tq "$GITHUB_WORKSPACE/NOOR_Source.zip" >/dev/null
-          unzip -q "$GITHUB_WORKSPACE/NOOR_Source.zip" -d "$RUNNER_TEMP/noor-extracted"
-          PUBSPEC="$(find "$RUNNER_TEMP/noor-extracted" -name pubspec.yaml -print -quit)"
+          test -s "$GITHUB_WORKSPACE/NOOR_Source.zip"
+          unzip -tq "$GITHUB_WORKSPACE/NOOR_Source.zip"
+          mkdir -p "$RUNNER_TEMP/noor-source"
+          unzip -q "$GITHUB_WORKSPACE/NOOR_Source.zip" -d "$RUNNER_TEMP/noor-source"
+          PUBSPEC="$(find "$RUNNER_TEMP/noor-source" -name pubspec.yaml -print -quit)"
           test -n "$PUBSPEC"
           PROJECT_DIR="$(dirname "$PUBSPEC")"
-          OVERLAY_B64="$GITHUB_WORKSPACE/.github/noor-overlay.tar.b64"
-          test -f "$OVERLAY_B64"
-          base64 --decode "$OVERLAY_B64" | tar -xf - -C "$PROJECT_DIR"
-          # Import the preserved legacy datasets and apply the NOOR 1.4 content/identity layer.
-          test -d "$GITHUB_WORKSPACE/legacy_content/assets/content"
-          test -f "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py"
-          mkdir -p "$PROJECT_DIR/assets/content/legacy" "$PROJECT_DIR/lib/data/content"
-          python3 "$GITHUB_WORKSPACE/.github/scripts/fetch_full_quran.py" "$GITHUB_WORKSPACE/legacy_content/assets/content"
-          python3 "$GITHUB_WORKSPACE/.github/scripts/check_quran_audio.py"
-          python3 "$GITHUB_WORKSPACE/.github/scripts/fetch_legacy_media.py"
-          # Persist the verified full Quran in the repository, not only in the APK workspace.
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add legacy_content/assets/content/quran_surahs.json legacy_content/assets/content/QURAN_SOURCE_NOTICE.json legacy_content/assets/content/media
-          if ! git diff --cached --quiet; then
-            git commit -m "Import complete Tanzil Uthmani Quran"
-            git push origin "HEAD:${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
-          fi
-          cp -a "$GITHUB_WORKSPACE/legacy_content/assets/content/." "$PROJECT_DIR/assets/content/legacy/"
-          python3 "$GITHUB_WORKSPACE/.github/scripts/validate_noor_content.py" "$GITHUB_WORKSPACE/legacy_content/assets/content"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/data/content/legacy_content.dart" "$PROJECT_DIR/lib/data/content/legacy_content.dart"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/legacy_content_screen.dart" "$PROJECT_DIR/lib/features/home/legacy_content_screen.dart"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/quran_library_screen.dart" "$PROJECT_DIR/lib/features/home/quran_library_screen.dart"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/quran_recitation_screen.dart" "$PROJECT_DIR/lib/features/home/quran_recitation_screen.dart"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/intro_video_screen.dart" "$PROJECT_DIR/lib/features/home/intro_video_screen.dart"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/features/home/level_check_screen.dart" "$PROJECT_DIR/lib/features/home/level_check_screen.dart"
-          mkdir -p "$PROJECT_DIR/lib/core/services"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_sound_service.dart" "$PROJECT_DIR/lib/core/services/noor_sound_service.dart"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/services/noor_voice.dart" "$PROJECT_DIR/lib/core/services/noor_voice.dart"
-          mkdir -p "$PROJECT_DIR/lib/core/widgets"
-          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/core/widgets/noor_arabic_keyboard.dart" "$PROJECT_DIR/lib/core/widgets/noor_arabic_keyboard.dart"
-          mkdir -p "$PROJECT_DIR/test"
-          cp -a "$GITHUB_WORKSPACE/noor_upgrade/test/." "$PROJECT_DIR/test/"
-          python3 -m py_compile "$GITHUB_WORKSPACE"/.github/scripts/*.py "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py"
-          python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
-          python3 "$GITHUB_WORKSPACE/.github/scripts/apply_noor_keyboard.py" "$PROJECT_DIR"
-          python3 "$GITHUB_WORKSPACE/.github/scripts/apply_noor_learning_domains.py" "$PROJECT_DIR"
-          test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
-          test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
-          mkdir -p "$RUNNER_TEMP/noor-workspace"
-          cp -a "$PROJECT_DIR"/. "$RUNNER_TEMP/noor-workspace/"
-          echo "NOOR_PROJECT_DIR=$RUNNER_TEMP/noor-workspace" >> "$GITHUB_ENV"
+          test -f "$PROJECT_DIR/lib/main.dart"
+          test -d "$PROJECT_DIR/assets"
+          test -f "$PROJECT_DIR/android/app/src/main/AndroidManifest.xml"
+          echo "NOOR_PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
 
       - name: Set up Java
         uses: actions/setup-java@v6
@@ -83,7 +43,7 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up latest stable Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -94,19 +54,6 @@ jobs:
           flutter --version
           dart --version
           java -version
-
-      - name: Generate Android platform files when absent
-        working-directory: ${{ env.NOOR_PROJECT_DIR }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ ! -d android ]; then
-            flutter create --platforms=android --org com.noor --project-name noor .
-          fi
-          chmod +x tool/configure_android_branding.sh
-          ./tool/configure_android_branding.sh
-          grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml
-          grep -q "android.intent.action.TTS_SERVICE" android/app/src/main/AndroidManifest.xml
 
       - name: Verify signing secrets and configure release signing
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
@@ -135,26 +82,23 @@ jobs:
           } > android/key.properties
           python3 tool/configure_android_signing.py "$PWD"
 
-      - name: Configure temporary CI-only Android signing
+      - name: Configure temporary CI-only signing
         if: github.event_name == 'pull_request' || (github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/'))
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p "$RUNNER_TEMP/noor-signing"
           keytool -genkeypair -v \
             -keystore "$RUNNER_TEMP/noor-signing/ci-debug.keystore" \
             -storepass android -alias androiddebugkey -keypass android \
             -dname "CN=NOOR CI,O=NOOR,C=EG" -keyalg RSA -keysize 2048 -validity 10000
-          cat > android/key.properties <<EOF
+          cat > android/key.properties <<EOF2
           storePassword=android
           keyPassword=android
           keyAlias=androiddebugkey
           storeFile=$RUNNER_TEMP/noor-signing/ci-debug.keystore
-          EOF
-
-      - name: Verify NOOR project tests
-        working-directory: ${{ env.NOOR_PROJECT_DIR }}
-        run: test -f test/widget_test.dart
+          EOF2
 
       - name: Install dependencies
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
@@ -164,6 +108,10 @@ jobs:
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: dart format lib test
 
+      - name: Verify Dart formatting
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        run: dart format --output=none --set-exit-if-changed lib test
+
       - name: Analyze
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter analyze
@@ -172,11 +120,11 @@ jobs:
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter test
 
-      - name: Build release APK (signed on protected main/tag only)
+      - name: Build release APK
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter build apk --release
 
-      - name: Verify APK signature
+      - name: Verify release APK signature
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         shell: bash
@@ -187,7 +135,6 @@ jobs:
           APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
           test -n "$APKSIGNER"
           "$APKSIGNER" verify --verbose "$APK"
-          rm -f android/key.properties
 
       - name: Always clean signing material
         if: always()
@@ -196,20 +143,14 @@ jobs:
           if [ -n "${{ env.NOOR_PROJECT_DIR }}" ]; then rm -f "${{ env.NOOR_PROJECT_DIR }}/android/key.properties"; fi
           rm -rf "$RUNNER_TEMP/noor-signing"
 
-      - name: Package complete Flutter project into one source ZIP
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 "$GITHUB_WORKSPACE/.github/scripts/package_noor_source.py" "$NOOR_PROJECT_DIR" "$GITHUB_WORKSPACE/dist/NOOR_Source.zip"
-
-      - name: Upload single-file NOOR source package
+      - name: Upload complete NOOR source archive
         uses: actions/upload-artifact@v7
         with:
           name: NOOR-Source-Package
           if-no-files-found: error
-          path: dist/NOOR_Source.zip
+          path: NOOR_Source.zip
 
-      - name: Upload APK build result
+      - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           name: ${{ (github.event_name == 'pull_request' || (github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/'))) && 'NOOR-APK-CI-TestKey' || 'NOOR-APK-Release-Signed' }}
