@@ -70,16 +70,20 @@ class _IntroVideoScreenState extends State<IntroVideoScreen> {
                       allowScrubbing: true,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
-                    ValueListenableBuilder<VideoPlayerValue>(
-                      valueListenable: _controller,
-                      builder: (context, value, _) => FilledButton.icon(
-                        onPressed: () => value.isPlaying
-                            ? _controller.pause()
-                            : _controller.play(),
-                        icon: Icon(value.isPlaying
-                            ? Icons.pause_rounded
-                            : Icons.play_arrow_rounded),
-                        label: Text(value.isPlaying ? 'إيقاف مؤقت' : 'تشغيل'),
+                    FilledButton.icon(
+                      onPressed: () async {
+                        if (_controller.value.isPlaying) {
+                          await _controller.pause();
+                        } else {
+                          await _controller.play();
+                        }
+                        if (mounted) setState(() {});
+                      },
+                      icon: Icon(_controller.value.isPlaying
+                          ? Icons.pause_rounded
+                          : Icons.play_arrow_rounded),
+                      label: Text(
+                        _controller.value.isPlaying ? 'إيقاف مؤقت' : 'تشغيل',
                       ),
                     ),
                   ],
