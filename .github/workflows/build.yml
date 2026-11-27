@@ -146,15 +146,14 @@ jobs:
 
       - name: Always clean signing material
         if: always()
-        working-directory: ${{ env.NOOR_PROJECT_DIR }}
         shell: bash
         run: |
-          rm -f android/key.properties
+          if [ -n "${{ env.NOOR_PROJECT_DIR }}" ]; then rm -f "${{ env.NOOR_PROJECT_DIR }}/android/key.properties"; fi
           rm -rf "$RUNNER_TEMP/noor-signing"
 
       - name: Upload APK build result
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ github.event_name == 'pull_request' || (github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')) && 'NOOR-APK-CI-Unsigned' || 'NOOR-APK-Release-Signed' }}
+          name: ${{ (github.event_name == 'pull_request' || (github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/'))) && 'NOOR-APK-CI-Unsigned' || 'NOOR-APK-Release-Signed' }}
           if-no-files-found: error
           path: ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
