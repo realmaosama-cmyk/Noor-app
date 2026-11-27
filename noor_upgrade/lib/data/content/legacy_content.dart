@@ -43,7 +43,7 @@ class LegacyContentRepository {
       try {
         final raw = await rootBundle.loadString('assets/content/legacy/$file');
         final json = jsonDecode(raw);
-        if (json is! Map) continue;
+        if (json is! Map<dynamic, dynamic>) continue;
         for (final key in const ['lessons', 'hadiths', 'games', 'surahs', 'ayat']) {
           final list = json[key];
           if (list is! List) continue;
@@ -68,12 +68,12 @@ class LegacyContentRepository {
     if (title.isEmpty) return null;
     final steps = map['steps'];
     final stepText = steps is List
-        ? steps.whereType<Map>().map((s) => _str(s['text'])).where((s) => s.isNotEmpty).join(' • ')
+        ? steps.whereType<Map<dynamic, dynamic>>().map((s) => _str(s['text'])).where((s) => s.isNotEmpty).join(' • ')
         : '';
     final body = _first([map['body'], map['kidMeaning'], map['text'], map['goal'], stepText, map['intro'], map['summary']]);
     if (body.isEmpty) return null;
     final source = map['source'];
-    final sourceText = source is Map
+    final sourceText = source is Map<dynamic, dynamic>
         ? _first([source['reference'], source['name']])
         : _first([source, map['book'], map['grade'], map['number'] == null ? '' : 'رقم ${map['number']}']);
     final id = _str(map['id']);
