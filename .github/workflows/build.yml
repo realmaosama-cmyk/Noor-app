@@ -70,6 +70,7 @@ jobs:
           python3 -m py_compile "$GITHUB_WORKSPACE"/.github/scripts/*.py "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py"
           python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
           python3 "$GITHUB_WORKSPACE/.github/scripts/apply_noor_keyboard.py" "$PROJECT_DIR"
+          python3 "$GITHUB_WORKSPACE/.github/scripts/apply_noor_learning_domains.py" "$PROJECT_DIR"
           test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
           test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
           mkdir -p "$RUNNER_TEMP/noor-workspace"
