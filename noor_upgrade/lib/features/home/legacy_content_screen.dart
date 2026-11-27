@@ -85,13 +85,13 @@ class LegacyContentScreen extends ConsumerWidget {
                                 childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                                 children: [
                                   Align(
-                                    alignment: Alignment.centerRight,
+                                    alignment: AlignmentDirectional.centerEnd,
                                     child: Text(item.body, style: const TextStyle(fontSize: 16, height: 1.7)),
                                   ),
                                   if (item.steps.isNotEmpty) ...[
                                     const SizedBox(height: 12),
                                     const Align(
-                                      alignment: Alignment.centerRight,
+                                      alignment: AlignmentDirectional.centerEnd,
                                       child: Text('جرّب هذه الخطوات', style: TextStyle(fontWeight: FontWeight.w900)),
                                     ),
                                     const SizedBox(height: 6),
@@ -111,7 +111,7 @@ class LegacyContentScreen extends ConsumerWidget {
                                   if (item.questions.isNotEmpty) ...[
                                     const SizedBox(height: 12),
                                     const Align(
-                                      alignment: Alignment.centerRight,
+                                      alignment: AlignmentDirectional.centerEnd,
                                       child: Text('فكّر وأجب', style: TextStyle(fontWeight: FontWeight.w900)),
                                     ),
                                     for (final question in item.questions)
@@ -120,8 +120,8 @@ class LegacyContentScreen extends ConsumerWidget {
                                   if (item.source.isNotEmpty) ...[
                                     const SizedBox(height: 8),
                                     Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text('المصدر: ${item.source}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      child: Text('المصدر: ${item.source}', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
                                     ),
                                   ],
                                 ],
