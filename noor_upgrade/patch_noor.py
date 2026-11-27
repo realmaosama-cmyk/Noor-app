@@ -125,17 +125,17 @@ insert = []
 if "android.permission.INTERNET" not in xml:
     insert.append('    <uses-permission android:name="android.permission.INTERNET" />')
 if "android.intent.action.TTS_SERVICE" not in xml:
-    query = (
-        '    <queries>\n'
+    query_intent = (
         '        <intent>\n'
         '            <action android:name="android.intent.action.TTS_SERVICE" />\n'
-        '        </intent>\n'
-        '    </queries>'
+        '        </intent>'
     )
     if "</queries>" in xml:
-        xml = xml.replace("</queries>", query.strip() + "\n    </queries>", 1)
+        xml = xml.replace("</queries>", query_intent + "\n    </queries>", 1)
     else:
-        insert.append(query)
+        insert.append(
+            '    <queries>\n' + query_intent + '\n    </queries>'
+        )
 if insert:
     xml = xml[:root.end()] + "\n" + "\n".join(insert) + xml[root.end():]
 manifest_path.write_text(xml, encoding="utf-8")
