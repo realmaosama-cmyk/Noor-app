@@ -15,7 +15,11 @@
         "اذكر معنى الصبر بكلماتك.",
         "لون سفينة وتحدث عن القصة."
       ],
-      "source": "القرآن الكريم: سورة نوح؛ هود 25–49"
+      "source": "القرآن الكريم: سورة نوح؛ هود 25–49",
+      "category": "prophets",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "npr_002",
@@ -30,7 +34,11 @@
         "حدد موقفاً ظهر فيه الصبر.",
         "ناقش الفرق بين العفو وحماية النفس من الأذى."
       ],
-      "source": "القرآن الكريم: سورة يوسف"
+      "source": "القرآن الكريم: سورة يوسف",
+      "category": "prophets",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "npr_003",
@@ -45,7 +53,11 @@
         "استخرج أسئلة التفكر في الآيات.",
         "اكتب خلاصة من ثلاثة أسطر."
       ],
-      "source": "القرآن الكريم: الأنعام 74–79؛ البقرة 125–129"
+      "source": "القرآن الكريم: الأنعام 74–79؛ البقرة 125–129",
+      "category": "prophets",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "npr_004",
@@ -60,7 +72,11 @@
         "اذكر من نطلب منه المساعدة عند الخوف.",
         "ارسم موجة وتحدث عن القصة."
       ],
-      "source": "القرآن الكريم: القصص 7–13"
+      "source": "القرآن الكريم: القصص 7–13",
+      "category": "prophets",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "npr_005",
@@ -75,7 +91,11 @@
         "استخرج معنى الرجوع إلى الله.",
         "اكتب كيف تصلح خطأ ارتكبته."
       ],
-      "source": "القرآن الكريم: الأنبياء 87–88"
+      "source": "القرآن الكريم: الأنبياء 87–88",
+      "category": "prophets",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "npr_006",
@@ -90,7 +110,11 @@
         "سجل القيمة في كل موقف.",
         "اكتب أوجه الشبه والاختلاف دون إضافة تفاصيل غير موجودة في النص."
       ],
-      "source": "القرآن الكريم: سور يوسف والقصص؛ تفسير ميسر"
+      "source": "القرآن الكريم: سور يوسف والقصص؛ تفسير ميسر",
+      "category": "prophets",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     }
   ]
 }
