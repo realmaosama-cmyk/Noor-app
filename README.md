@@ -87,7 +87,7 @@ flutter build apk --release
 ينتج ملف Android:
 `build/app/outputs/flutter-apk/app-release.apk`
 
-سير GitHub Actions ينفذ تحليل Flutter والاختبارات واختبارات parser وبناء APK. بناءات Pull Request لا تستخدم أسرار التوقيع وتنتج APK غير موقع للاختبار؛ التوقيع والتحقق منه يقتصران على `main` أو الوسوم (tags). الإصدار المستهدف APK فقط، وليس Android App Bundle (AAB).
+سير GitHub Actions ينفذ مدقق JSON لكل الأصول، وتحليل Flutter، واختبارات parser التي تغطي الآيات والخطوات والأسئلة ونص الحديث، ثم بناء APK. بناءات Pull Request لا تستخدم أسرار التوقيع وتنتج APK غير موقع للاختبار؛ التوقيع والتحقق منه يقتصران على `main` أو الوسوم (tags). الإصدار المستهدف APK فقط، وليس Android App Bundle (AAB).
 
 ## المصدر والمساهمات
 
