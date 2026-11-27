@@ -97,12 +97,12 @@ def main() -> None:
         except Exception as exc:
             raise RuntimeError(f"Cannot read existing Quran data for cross-check: {exc}") from exc
 
-    params = urllib.parse.urlencode({
+    query = urllib.parse.urlencode({
         "quranType": "uthmani",
         "outType": "txt-2",
         "agree": "true",
-    }).encode("ascii")
-    raw_text = fetch(TEXT_URL, params)
+    })
+    raw_text = fetch(f"{TEXT_URL}?{query}")
     raw_meta = fetch(META_URL)
     chapters = parse_text(raw_text)
     chapter_meta = metadata(raw_meta)
