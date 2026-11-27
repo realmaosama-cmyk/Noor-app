@@ -18,7 +18,7 @@ r = router.read_text(encoding="utf-8")
 if "learning_domain_screen.dart" not in r:
     r = r.replace("import '../../features/home/letter_builder_game_screen.dart';",
       "import '../../features/home/letter_builder_game_screen.dart';\nimport '../../features/home/learning_domain_screen.dart';\nimport '../../features/home/quran_library_screen.dart';")
-route_anchor = "      GoRoute(path: '/section/:id'"
+route_anchor = "path: '/section/:id'"
 if "LearningDomainScreen(" not in r:
     at = r.find(route_anchor)
     if at < 0: raise SystemExit("Could not locate route insertion point")
