@@ -125,7 +125,9 @@ class LegacyContentRepository {
   }
 
   static bool _belongsToSection(LegacyContentItem item, String section, String file) {
-    if (section == 'games' || section == 'challenges' || section == 'achievements') return true;
+    if (section == 'games') return file == 'noor_games.json';
+    if (section == 'challenges') return file == 'games.json';
+    if (section == 'achievements') return file == 'noor_achievements.json';
     final category = _normalize(item.category);
     if (category.isNotEmpty) {
       final accepted = _sectionCategories[section] ?? const <String>{};
@@ -205,6 +207,68 @@ class LegacyContentRepository {
       if (map['ayahs'] is List)
         (map['ayahs'] as List).map((ayah) => ayah is Map ? _str(ayah['text']) : _str(ayah)).where((ayah) => ayah.isNotEmpty).join(' ۞ '),
     ]);
+
+    // Preserve the legacy mini-game payloads instead of dropping their scenarios,
+    // answer choices, sorting groups, and cards during normalization.
+    final rawScenarios = map['scenarios'];
+    if (rawScenarios is List) {
+      for (final scenario in rawScenarios) {
+        if (scenario is! Map) continue;
+        final value = Map<String, dynamic>.from(scenario);
+        final prompt = _first([value['say'], value['question'], value['prompt'], value['text']]);
+        final rawOptions = value['options'];
+        final answer = value['answerIndex'] ?? value['answer'];
+        if (prompt.isNotEmpty && rawOptions is List && rawOptions.length >= 2 && answer is num) {
+          final options = rawOptions.map((option) {
+            if (option is Map) {
+              final item = Map<String, dynamic>.from(option);
+              return '${_str(item['emoji'])} ${_first([item['label'], item['text'], item['title']])}'.trim();
+            }
+            return _str(option);
+          }).where((option) => option.isNotEmpty).toList(growable: false);
+          if (options.length >= 2 && answer.toInt() >= 0 && answer.toInt() < options.length) {
+            questions.add({
+              'question': prompt,
+              'options': options,
+              'answerIndex': answer.toInt(),
+              'hint': _first([value['hint'], value['feedback']]),
+            });
+          }
+        } else if (prompt.isNotEmpty) {
+          steps.add(prompt);
+        }
+      }
+    }
+
+    final rawGroups = map['groups'];
+    if (rawGroups is List) {
+      for (final group in rawGroups) {
+        if (group is Map) {
+          final value = Map<String, dynamic>.from(group);
+          final label = _first([value['label'], value['title']]);
+          if (label.isNotEmpty) steps.add('مجموعة: ${_str(value['emoji'])} $label'.trim());
+        }
+      }
+    }
+
+    final rawItems = map['items'];
+    if (rawItems is List) {
+      for (final item in rawItems) {
+        if (item is! Map) continue;
+        final value = Map<String, dynamic>.from(item);
+        final label = _first([value['label'], value['title'], value['say'], value['text']]);
+        if (label.isEmpty) continue;
+        final emoji = _str(value['emoji']);
+        final group = _str(value['group']);
+        final recite = value['recite'];
+        final reciteNote = recite is List && recite.length >= 2
+            ? ' • تلاوة: سورة ${recite[0]}، الآية ${recite[1]}'
+            : '';
+        final groupNote = group.isNotEmpty ? ' • $group' : '';
+        steps.add('${emoji.isEmpty ? '' : '$emoji '}$label$groupNote$reciteNote');
+      }
+    }
+
     final stepText = steps.join(' • ');
     final finalBody = body.isNotEmpty ? body : stepText.isNotEmpty ? stepText : _str(map['summary']);
     if (finalBody.isEmpty && questions.isEmpty) return null;
