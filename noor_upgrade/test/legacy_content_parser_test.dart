@@ -58,7 +58,13 @@ void main() {
               'body': 'نص الدرس',
               'steps': [
                 {'type': 'listen', 'text': 'استمع جيدًا'},
-                {'type': 'choose', 'label': 'اختر الصورة'},
+                {
+                  'type': 'choose',
+                  'question': 'أي صورة؟',
+                  'options': ['صورة أ', 'صورة ب'],
+                  'answer': 0,
+                  'label': 'اختر الصورة',
+                },
                 {'type': 'reward', 'instruction': 'أحسنت، راجع إجابتك'}
               ],
               'questions': [
