@@ -15,7 +15,11 @@
         "رتب الصور من الفجر إلى العشاء.",
         "اسأل ولي الأمر عن الصلاة القادمة."
       ],
-      "source": "مادة تعليمية أصلية؛ مراجعة ولي الأمر لازمة"
+      "source": "مادة تعليمية أصلية؛ مراجعة ولي الأمر لازمة",
+      "category": "prayer",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "np_002",
@@ -30,7 +34,11 @@
         "رتب بطاقات الخطوات حسب الشرح المعتمد للأسرة.",
         "توضأ عملياً مع مراعاة عدم الإسراف."
       ],
-      "source": "تعليم عملي بإشراف ولي الأمر ومعلم موثوق"
+      "source": "تعليم عملي بإشراف ولي الأمر ومعلم موثوق",
+      "category": "prayer",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "np_003",
@@ -45,7 +53,11 @@
         "تعلم معنى الفاتحة مع تفسير ميسر موثوق.",
         "بعد الصلاة، اكتب شيئاً ساعدك على التركيز."
       ],
-      "source": "القرآن الكريم: المؤمنون 1–2؛ شرح تربوي مبسط"
+      "source": "القرآن الكريم: المؤمنون 1–2؛ شرح تربوي مبسط",
+      "category": "prayer",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "np_004",
@@ -60,7 +72,11 @@
         "افرد السجادة بمساعدة بالغ.",
         "أعدها إلى مكانها بعد الانتهاء."
       ],
-      "source": "نشاط عادات يومية"
+      "source": "نشاط عادات يومية",
+      "category": "prayer",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "np_005",
@@ -75,7 +91,11 @@
         "اذكر سلوكاً يحافظ على نظافته.",
         "طبق الأدب مع مراعاة تعليمات المسجد."
       ],
-      "source": "آداب عامة للمسجد"
+      "source": "آداب عامة للمسجد",
+      "category": "prayer",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "np_006",
@@ -90,7 +110,11 @@
         "سجل ما يساعدك على التذكر.",
         "راجع الجدول أسبوعياً وعدله."
       ],
-      "source": "أداة تنظيم شخصية بإشراف ولي الأمر"
+      "source": "أداة تنظيم شخصية بإشراف ولي الأمر",
+      "category": "prayer",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     }
   ]
 }
