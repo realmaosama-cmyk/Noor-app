@@ -80,7 +80,7 @@ void main() {
       expect(items, hasLength(1));
       expect(items.single.steps, ['استمع جيدًا', 'أحسنت، راجع إجابتك']);
       expect(items.single.questions, hasLength(2));
-      expect(items.single.questions.first['answerIndex'], 0);
+      expect(items.single.questions.last['answerIndex'], 0);
     });
 
     test('prefers complete hadith text over child explanation', () {
