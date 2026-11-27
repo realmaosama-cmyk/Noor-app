@@ -25,7 +25,7 @@ class LegacyContentScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final child = ref.watch(selectedChildProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('مكتبة نور وفداء')),
+      appBar: AppBar(title: const Text('مكتبة نور')),
       body: NoorPageBackground(
         asset: 'assets/branding/noor-bg-ocean.webp',
         child: child.when(
@@ -47,7 +47,7 @@ class LegacyContentScreen extends ConsumerWidget {
                         const Text('رحلة معرفة أكبر',
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
                         const SizedBox(height: 6),
-                        Text('محتوى إضافي من مكتبة نور وفداء، مرتب حسب المرحلة العمرية لـ ${learner.name}.',
+                        Text('محتوى إضافي من مكتبة نور، مرتب حسب المرحلة العمرية لـ ${learner.name}.',
                             style: const TextStyle(height: 1.5)),
                       ],
                     ),
@@ -88,6 +88,45 @@ class LegacyContentScreen extends ConsumerWidget {
                                     alignment: Alignment.centerRight,
                                     child: Text(item.body, style: const TextStyle(fontSize: 16, height: 1.7)),
                                   ),
+                                  if (item.steps.isNotEmpty) ...[
+                                    const SizedBox(height: 12),
+                                    const Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text('جرّب هذه الخطوات', style: TextStyle(fontWeight: FontWeight.w900)),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    for (var index = 0; index < item.steps.length; index++)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 4),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CircleAvatar(radius: 11, child: Text('${index + 1}', style: const TextStyle(fontSize: 11))),
+                                            const SizedBox(width: 8),
+                                            Expanded(child: Text(item.steps[index], textAlign: TextAlign.right, style: const TextStyle(height: 1.5))),
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                  if (item.questions.isNotEmpty) ...[
+                                    const SizedBox(height: 12),
+                                    const Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text('فكّر وأجب', style: TextStyle(fontWeight: FontWeight.w900)),
+                                    ),
+                                    for (final question in item.questions)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            '${question['question'] ?? question['prompt'] ?? question['text'] ?? ''}',
+                                            textAlign: TextAlign.right,
+                                            style: const TextStyle(height: 1.5),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                   if (item.source.isNotEmpty) ...[
                                     const SizedBox(height: 8),
                                     Align(
