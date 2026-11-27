@@ -192,6 +192,19 @@ jobs:
           if [ -n "${{ env.NOOR_PROJECT_DIR }}" ]; then rm -f "${{ env.NOOR_PROJECT_DIR }}/android/key.properties"; fi
           rm -rf "$RUNNER_TEMP/noor-signing"
 
+      - name: Package complete Flutter project into one source ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 "$GITHUB_WORKSPACE/.github/scripts/package_noor_source.py" "$NOOR_PROJECT_DIR" "$GITHUB_WORKSPACE/dist/NOOR_Source.zip"
+
+      - name: Upload single-file NOOR source package
+        uses: actions/upload-artifact@v7
+        with:
+          name: NOOR-Source-Package
+          if-no-files-found: error
+          path: dist/NOOR_Source.zip
+
       - name: Upload APK build result
         uses: actions/upload-artifact@v7
         with:
