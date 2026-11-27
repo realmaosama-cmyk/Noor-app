@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / ".github" / "legacy_media_manifest.json"
 OUTPUT = ROOT / "legacy_content" / "assets" / "content" / "media"
 USER_AGENT = "NOOR-Legacy-Media-Migration/1.0"
+SOURCE_REPO = ""
+SOURCE_COMMIT = ""
 
 
 def git_blob_sha(data: bytes) -> str:
@@ -35,9 +37,7 @@ def download_one(item: dict) -> tuple[str, str]:
 
     url = (
         "https://raw.githubusercontent.com/"
-        f"{json.loads(MANIFEST.read_text(encoding='utf-8'))['source_repository']}/"
-        f"{json.loads(MANIFEST.read_text(encoding='utf-8'))['source_commit']}/"
-        f"{item['source_path']}"
+        f"{SOURCE_REPO}/{SOURCE_COMMIT}/{item['source_path']}"
     )
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=120) as response:
@@ -57,7 +57,10 @@ def download_one(item: dict) -> tuple[str, str]:
 
 
 def main() -> None:
+    global SOURCE_REPO, SOURCE_COMMIT
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    SOURCE_REPO = manifest["source_repository"]
+    SOURCE_COMMIT = manifest["source_commit"]
     assets = manifest["assets"]
     if len(assets) != 172:
         raise ValueError(f"Expected 172 pinned media files, found {len(assets)}")
