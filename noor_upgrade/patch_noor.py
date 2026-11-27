@@ -42,6 +42,19 @@ pubspec = pubspec_path.read_text(encoding='utf-8')
 for asset_dir in ('    - assets/content/legacy/\n', '    - assets/content/legacy/lessons/\n', '    - assets/content/legacy/levelcheck/\n'):
     if asset_dir not in pubspec:
         pubspec = pubspec.replace('    - assets/content/\n', '    - assets/content/\n' + asset_dir, 1)
+if 'video_player:' not in pubspec:
+    if '  just_audio:' in pubspec:
+        pubspec = pubspec.replace(
+            '  just_audio: ^0.10.6\\n',
+            '  just_audio: ^0.10.6\\n  video_player: ^2.9.1\\n',
+            1,
+        )
+    else:
+        pubspec = pubspec.replace(
+            '  flutter_tts: ^4.2.3\\n',
+            '  flutter_tts: ^4.2.3\\n  video_player: ^2.9.1\\n',
+            1,
+        )
 pubspec_path.write_text(pubspec, encoding='utf-8')
 
 branding_path = root / 'tool/configure_android_branding.sh'
