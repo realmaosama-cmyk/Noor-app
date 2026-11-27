@@ -36,6 +36,13 @@ jobs:
           OVERLAY_B64="$GITHUB_WORKSPACE/.github/noor-overlay.tar.b64"
           test -f "$OVERLAY_B64"
           base64 --decode "$OVERLAY_B64" | tar -xf - -C "$PROJECT_DIR"
+          # Import the preserved legacy datasets and apply the NOOR 1.4 content/identity layer.
+          test -d "$GITHUB_WORKSPACE/legacy_content/assets/content"
+          test -f "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py"
+          mkdir -p "$PROJECT_DIR/assets/content/legacy" "$PROJECT_DIR/lib/data/content"
+          cp -a "$GITHUB_WORKSPACE/legacy_content/assets/content/." "$PROJECT_DIR/assets/content/legacy/"
+          cp "$GITHUB_WORKSPACE/noor_upgrade/lib/data/content/legacy_content.dart" "$PROJECT_DIR/lib/data/content/legacy_content.dart"
+          python3 "$GITHUB_WORKSPACE/noor_upgrade/patch_noor.py" "$PROJECT_DIR"
           test -f "$PROJECT_DIR/lib/features/home/welcome_screen.dart"
           test -f "$PROJECT_DIR/tool/configure_android_branding.sh"
           mkdir -p "$RUNNER_TEMP/noor-workspace"
