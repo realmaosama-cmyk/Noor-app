@@ -73,7 +73,8 @@ void main() {
 
       expect(items, hasLength(1));
       expect(items.single.steps, ['استمع جيدًا', 'اختر الصورة', 'أحسنت، راجع إجابتك']);
-      expect(items.single.questions, hasLength(1));
+      expect(items.single.questions, hasLength(2));
+      expect(items.single.questions.first['answerIndex'], 0);
     });
 
     test('prefers complete hadith text over child explanation', () {
@@ -100,6 +101,37 @@ void main() {
       expect(items.single.source, contains('صحيح البخاري'));
       expect(items.single.source, contains('رقم: 8'));
       expect(items.single.source, contains('صحيح'));
+    });
+
+    test('converts legacy choose/reward/listen steps into visible lesson content', () {
+      final items = LegacyContentRepository.parseDocument(
+        jsonEncode({
+          'id': 'legacy_prayer_activity',
+          'title': 'نشاط الصلاة',
+          'section': 'prayer',
+          'band': 'atfal',
+          'steps': [
+            {'type': 'listen', 'say': 'استمع إلى التعليمات'},
+            {
+              'type': 'choose',
+              'question': 'كم ركعة في الفجر؟',
+              'options': ['اثنتان', 'ثلاث'],
+              'answer': 0,
+              'prompt': '🌅',
+            },
+            {'type': 'reward', 'stars': 3},
+          ],
+        }),
+        'lessons/a_salah_rakat.json',
+      );
+
+      expect(items, hasLength(1));
+      expect(items.single.category, 'prayer');
+      expect(items.single.steps, contains('استمع إلى التعليمات'));
+      expect(items.single.steps.last, contains('3'));
+      expect(items.single.questions, hasLength(1));
+      expect(items.single.questions.single['question'], 'كم ركعة في الفجر؟');
+      expect(items.single.questions.single['answerIndex'], 0);
     });
   });
 }
