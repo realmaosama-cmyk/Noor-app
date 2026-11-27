@@ -48,7 +48,7 @@ class LegacyContentRepository {
           final list = json[key];
           if (list is! List) continue;
           for (final rawItem in list) {
-            if (rawItem is! Map) continue;
+            if (rawItem is! Map<dynamic, dynamic>) continue;
             final item = _parse(Map<String, dynamic>.from(rawItem), file);
             if (item != null && item.suitableFor(age)) {
               result.putIfAbsent(item.id, () => item);
