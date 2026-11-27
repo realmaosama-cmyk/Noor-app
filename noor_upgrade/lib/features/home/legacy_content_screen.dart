@@ -12,6 +12,7 @@ import '../../data/content/legacy_content.dart';
 import '../../data/providers.dart';
 import 'quran_library_screen.dart';
 import 'intro_video_screen.dart';
+import 'level_check_screen.dart';
 
 class LegacyContentScreen extends ConsumerWidget {
   const LegacyContentScreen({super.key});
@@ -77,6 +78,19 @@ class LegacyContentScreen extends ConsumerWidget {
                         Text('محتوى إضافي من مكتبة نور، مرتب حسب المرحلة العمرية لـ ${learner.name}.',
                             style: const TextStyle(height: 1.5)),
                       ],
+                    ),
+                  ),
+                ),
+                Card(
+                  child: ListTile(
+                    leading: const CircleAvatar(child: Icon(Icons.quiz_rounded)),
+                    title: const Text('مراجعة المهارات وتحديد ما نراجعه'),
+                    subtitle: const Text('أسئلة قصيرة مناسبة للمرحلة العمرية في أربعة مجالات'),
+                    trailing: const Icon(Icons.chevron_left_rounded),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => LevelCheckScreen(age: learner.age),
+                      ),
                     ),
                   ),
                 ),
