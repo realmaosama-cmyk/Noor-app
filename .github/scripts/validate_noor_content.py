@@ -281,8 +281,11 @@ else:
         if ayah_total != 6236:
             errors.append(f"quran_surahs.json: expected 6,236 ayahs, found {ayah_total}")
         source = quran.get("source", {})
-        if source.get("name") != "Tanzil Quran Text (Uthmani)" or not re.fullmatch(r"[0-9a-f]{64}", source.get("upstream_sha256", "")):
-            errors.append("quran_surahs.json: missing Tanzil provenance or upstream SHA-256")
+        if (
+            source.get("name") != "Tanzil Quran Text (Uthmani)"
+            or source.get("upstream_sha256") != "bf4f57b968d03f4131c070b1e285da9be0e0a108a21c910e872801ca273312c8"
+        ):
+            errors.append("quran_surahs.json: Tanzil provenance or reviewed upstream checksum mismatch")
     except Exception as exc:
         errors.append(f"quran_surahs.json: invalid dataset: {exc}")
 
