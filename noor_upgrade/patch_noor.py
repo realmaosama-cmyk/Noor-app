@@ -40,7 +40,7 @@ home_path.write_text(home, encoding='utf-8')
 
 pubspec_path = root / 'pubspec.yaml'
 pubspec = pubspec_path.read_text(encoding='utf-8')
-for asset_dir in ('    - assets/content/legacy/\n', '    - assets/content/legacy/lessons/\n', '    - assets/content/legacy/levelcheck/\n'):
+for asset_dir in ('    - assets/content/legacy/\n', '    - assets/content/legacy/lessons/\n', '    - assets/content/legacy/levelcheck/\n', '    - assets/content/legacy/media/art/\n', '    - assets/content/legacy/media/audio/sfx/\n', '    - assets/content/legacy/media/audio/song/\n', '    - assets/content/legacy/media/icons/\n', '    - assets/content/legacy/media/videos/\n'):
     if asset_dir not in pubspec:
         pubspec = pubspec.replace('    - assets/content/\n', '    - assets/content/\n' + asset_dir, 1)
 if re.search(r'(?m)^  video_player:', pubspec) is None:
