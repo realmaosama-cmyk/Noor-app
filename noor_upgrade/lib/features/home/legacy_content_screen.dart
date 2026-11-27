@@ -88,6 +88,21 @@ class LegacyContentScreen extends ConsumerWidget {
                                     alignment: AlignmentDirectional.centerEnd,
                                     child: Text(item.body, style: const TextStyle(fontSize: 16, height: 1.7)),
                                   ),
+                                  if (!item.contentVerified)
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber.shade50,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: Colors.amber.shade300),
+                                      ),
+                                      child: const Text(
+                                        'مادة تعليمية قيد المراجعة؛ راجع ولي الأمر أو المعلم المختص مصادرها قبل اعتمادها.',
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(fontSize: 13, height: 1.5),
+                                      ),
+                                    ),
                                   if (item.steps.isNotEmpty) ...[
                                     const SizedBox(height: 12),
                                     const Align(
