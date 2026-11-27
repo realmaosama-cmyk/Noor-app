@@ -11,26 +11,27 @@ if router_import not in router:
     if anchor not in router:
         raise SystemExit('Could not find the app router library import')
     router = router.replace(anchor, anchor + router_import, 1)
-route = "GoRoute(path: '/legacy-content', builder: (_, __) => const LegacyContentScreen()),\n      "
+route = "GoRoute(path: '/legacy-content', builder: (_, __) => const LegacyContentScreen()),"
 if "path: '/legacy-content'" not in router:
-    anchor = "GoRoute(path: '/library', builder: (_, __) => const LibraryScreen()),"
+    anchor = "routes: ["
     if anchor not in router:
-        raise SystemExit('Could not find the app library route')
-    router = router.replace(anchor, route + anchor, 1)
+        raise SystemExit('Could not find the app route list')
+    router = router.replace(anchor, anchor + "\\n      " + route, 1)
 router_path.write_text(router, encoding='utf-8')
 
 home_path = root / 'lib/features/home/home_screen.dart'
 home = home_path.read_text(encoding='utf-8')
 if "context.push('/legacy-content')" not in home:
-    anchor = "          IconButton(\n              tooltip: 'المكتبة',"
-    button = """          IconButton(
+    anchor = "actions: ["
+    button = """
+          IconButton(
               tooltip: 'مكتبة نور وفداء',
               onPressed: () => context.push('/legacy-content'),
               icon: const Icon(Icons.auto_awesome_rounded)),
 """
     if anchor not in home:
-        raise SystemExit('Could not find the home library shortcut')
-    home = home.replace(anchor, button + anchor, 1)
+        raise SystemExit('Could not find the home app bar actions')
+    home = home.replace(anchor, anchor + button, 1)
 home_path.write_text(home, encoding='utf-8')
 
 pubspec_path = root / 'pubspec.yaml'
