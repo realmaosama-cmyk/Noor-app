@@ -156,7 +156,7 @@ class _QuranRecitationScreenState extends State<QuranRecitationScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: DropdownButtonFormField<int>(
-                        value: _surahNumber,
+                        initialValue: _surahNumber,
                         decoration: const InputDecoration(
                           labelText: 'اختر السورة',
                           border: OutlineInputBorder(),
