@@ -88,7 +88,6 @@ class LegacyContentRepository {
           final item = _parse(map, file);
           if (item == null || !item.suitableFor(age) || !_belongsToSection(item, sectionId, file)) continue;
           final titleKey = _normalize(item.title);
-          final ageKey = '${item.minAge}-${item.maxAge}';
           final duplicateKey = titleKey;
           if (seenIds.contains(item.id) || seenTitles.contains(duplicateKey)) continue;
           seenIds.add(item.id);
