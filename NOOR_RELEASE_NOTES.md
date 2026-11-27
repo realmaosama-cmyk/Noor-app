@@ -9,6 +9,8 @@
 - Deduplicate repeated records by stable ID and normalized title within each section.
 - Expose parsing failures in debug builds rather than silently swallowing every exception.
 - Display lesson steps and reflection questions in the NOOR library, including interactive multiple-choice checks for newly added activities.
+- Normalize legacy `band` age metadata and cache section/age loads to avoid repeated JSON reads.
+- Add explicit Qur'anic supplication text (Al-Isra 17:24 and Al-Baqarah 2:201) and named classical biography/sirah source works; references remain pending specialist verification.
 - Expand each of the nine curated packs from six to nine activities (81 total).
 
 ## Content quality
