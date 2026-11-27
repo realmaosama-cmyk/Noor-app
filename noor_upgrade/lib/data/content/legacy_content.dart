@@ -64,7 +64,14 @@ class LegacyContentRepository {
     'achievements': {'achievement', 'achievements', 'badge', 'badges', 'إنجازات', 'شارات'},
   };
 
-  static Future<List<LegacyContentItem>> loadForSection(String sectionId, int age) async {
+  static final Map<String, Future<List<LegacyContentItem>>> _cache = {};
+
+  static Future<List<LegacyContentItem>> loadForSection(String sectionId, int age) {
+    final key = '$sectionId:$age';
+    return _cache.putIfAbsent(key, () => _loadForSection(sectionId, age));
+  }
+
+  static Future<List<LegacyContentItem>> _loadForSection(String sectionId, int age) async {
     final files = _files[sectionId] ?? const <String>[];
     final result = <LegacyContentItem>[];
     final seenIds = <String>{};
@@ -226,8 +233,8 @@ class LegacyContentRepository {
       summary: _summary(map, finalBody),
       body: finalBody,
       source: sourceText,
-      minAge: _num(map['minAge'], 3),
-      maxAge: _num(map['maxAge'], 99),
+      minAge: _ageBound(map, isMinimum: true),
+      maxAge: _ageBound(map, isMinimum: false),
       steps: List<String>.unmodifiable(steps),
       questions: List<Map<String, dynamic>>.unmodifiable(questions),
       week: int.tryParse(weekMatch?.group(1) ?? '') ?? _num(map['week'], 0),
@@ -260,6 +267,21 @@ class LegacyContentRepository {
       if (value is String && value.trim().isNotEmpty) return value.trim();
     }
     return '';
+  }
+
+  static int _ageBound(Map<String, dynamic> map, {required bool isMinimum}) {
+    final explicit = map[isMinimum ? 'minAge' : 'maxAge'] ??
+        map[isMinimum ? 'min_age' : 'max_age'];
+    if (explicit is num) return explicit.toInt();
+    final band = _normalize(_str(map['band']));
+    if (band == 'atfal' || band == 'children' || band == 'early_childhood') {
+      return isMinimum ? 3 : 8;
+    }
+    if (band == 'murahiq' || band == 'murahiqoon' ||
+        band == 'murahiqoun' || band == 'nashia' || band == 'youth') {
+      return isMinimum ? 9 : 12;
+    }
+    return isMinimum ? 3 : 99;
   }
 
   static int _num(dynamic value, int fallback) =>
