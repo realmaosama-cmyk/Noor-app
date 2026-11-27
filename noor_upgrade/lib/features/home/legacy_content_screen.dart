@@ -18,6 +18,7 @@ class LegacyContentScreen extends ConsumerWidget {
     ('prophets', 'قصص الأنبياء', '🌿'),
     ('learn', 'التعلم والمناهج الأسبوعية', '🎨'),
     ('games', 'الألعاب والتحديات', '🎮'),
+    ('achievements', 'الإنجازات والشارات', '🏅'),
   ];
 
   @override
