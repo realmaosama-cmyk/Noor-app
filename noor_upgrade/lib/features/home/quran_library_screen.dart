@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:audio_session/audio_session.dart';
 
 import '../../core/widgets/noor_brand.dart';
 
@@ -252,6 +253,8 @@ class _QuranSurahDetailScreenState extends State<QuranSurahDetailScreen> {
       _audioError = null;
     });
     try {
+      final audioSession = await AudioSession.instance;
+      await audioSession.configure(AudioSessionConfiguration.speech());
       await _player.setUrl(url);
       if (!mounted || !_playingAll) return;
       setState(() => _loadingAudio = false);
