@@ -74,7 +74,7 @@ class LegacyContentRepository {
       try {
         final raw = await rootBundle.loadString('assets/content/legacy/$file');
         for (final item in parseDocument(raw, file)) {
-          if (item == null || !item.suitableFor(age) || !_belongsToSection(item, sectionId, file)) continue;
+          if (!item.suitableFor(age) || !_belongsToSection(item, sectionId, file)) continue;
           final titleKey = _normalize(item.title);
           final duplicateKey = titleKey;
           if (seenIds.contains(item.id) || seenTitles.contains(duplicateKey)) continue;
