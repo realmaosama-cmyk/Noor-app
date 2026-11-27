@@ -118,24 +118,26 @@ import re
 
 manifest_path = Path("android/app/src/main/AndroidManifest.xml")
 xml = manifest_path.read_text(encoding="utf-8")
-root = re.search(r"<manifest\\b[^>]*>", xml)
+root = re.search(r"<manifest\b[^>]*>", xml)
 if root is None:
     raise SystemExit("Android manifest root element not found")
 insert = []
 if "android.permission.INTERNET" not in xml:
     insert.append('    <uses-permission android:name="android.permission.INTERNET" />')
 if "android.intent.action.TTS_SERVICE" not in xml:
-    query = '''    <queries>
-        <intent>
-            <action android:name="android.intent.action.TTS_SERVICE" />
-        </intent>
-    </queries>'''
+    query = (
+        '    <queries>\n'
+        '        <intent>\n'
+        '            <action android:name="android.intent.action.TTS_SERVICE" />\n'
+        '        </intent>\n'
+        '    </queries>'
+    )
     if "</queries>" in xml:
-        xml = xml.replace("</queries>", query.strip() + "\\n    </queries>", 1)
+        xml = xml.replace("</queries>", query.strip() + "\n    </queries>", 1)
     else:
         insert.append(query)
 if insert:
-    xml = xml[:root.end()] + "\\n" + "\\n".join(insert) + xml[root.end():]
+    xml = xml[:root.end()] + "\n" + "\n".join(insert) + xml[root.end():]
 manifest_path.write_text(xml, encoding="utf-8")
 PY
 '''
