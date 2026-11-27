@@ -127,7 +127,7 @@ jobs:
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter test
 
-      - name: Build signed release APK only
+      - name: Build release APK (signed on protected main/tag only)
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         run: flutter build apk --release
 
@@ -144,9 +144,17 @@ jobs:
           "$APKSIGNER" verify --verbose "$APK"
           rm -f android/key.properties
 
+      - name: Always clean signing material
+        if: always()
+        working-directory: ${{ env.NOOR_PROJECT_DIR }}
+        shell: bash
+        run: |
+          rm -f android/key.properties
+          rm -rf "$RUNNER_TEMP/noor-signing"
+
       - name: Upload APK build result
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ github.event_name == 'pull_request' && 'NOOR-APK-CI-Unsigned' || 'NOOR-APK-Release-Signed' }}
+          name: ${{ github.event_name == 'pull_request' || (github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')) && 'NOOR-APK-CI-Unsigned' || 'NOOR-APK-Release-Signed' }}
           if-no-files-found: error
           path: ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
