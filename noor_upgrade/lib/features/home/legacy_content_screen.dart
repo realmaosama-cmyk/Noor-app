@@ -199,7 +199,9 @@ class _LegacyQuestionCardState extends State<_LegacyQuestionCard> {
                 style: const TextStyle(fontWeight: FontWeight.w800, height: 1.5)),
             RadioGroup<int>(
               groupValue: _selected,
-              onChanged: answered ? null : (value) => setState(() => _selected = value),
+              onChanged: (value) {
+                if (!answered) setState(() => _selected = value);
+              },
               child: Column(
                 children: [
                   for (var index = 0; index < options.length; index++)
