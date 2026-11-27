@@ -365,7 +365,7 @@ class _VoicePhraseLibraryScreenState extends State<VoicePhraseLibraryScreen> {
               orElse: () => groups.first,
             );
             final phrases = (selected['phrases'] as List)
-                .whereType<Map>()
+                .whereType<Map<dynamic, dynamic>>()
                 .map((item) => Map<String, dynamic>.from(item))
                 .where((phrase) {
                   final text = (phrase['text'] ?? '').toString();
@@ -383,7 +383,7 @@ class _VoicePhraseLibraryScreenState extends State<VoicePhraseLibraryScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                   child: DropdownButtonFormField<String>(
-                    value: selected['id'] as String,
+                    initialValue: selected['id'] as String,
                     decoration: const InputDecoration(
                       labelText: 'مجموعة العبارات',
                       border: OutlineInputBorder(),
