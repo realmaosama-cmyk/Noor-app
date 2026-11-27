@@ -90,7 +90,7 @@ if "اختر طريق رحلتك" not in h:
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: color)),
           ])),
           Icon(Icons.arrow_forward_ios_rounded, size: 18, color: color),
-        ]),),),),);
+        ]),),),);
 }
 
 """
