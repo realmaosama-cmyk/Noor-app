@@ -1,7 +1,9 @@
 {
   "source": "Tanzil Quran Text (Uthmani)",
-  "url": "https://tanzil.net/docs/text_license",
-  "license": "CC BY 3.0",
-  "notice": "Reproduced verbatim; changing the text is not allowed. Source: Tanzil Project. Updates: https://tanzil.net/updates/.",
-  "scope": "This legacy dataset includes 58 surahs and 1139 ayahs: Al-Fatihah plus surahs 58–114. Surahs 2–57 are absent; this is not a complete Quran."
+  "url": "https://tanzil.net/download/",
+  "license": "Creative Commons Attribution 3.0",
+  "copyright": "Copyright (C) 2007-2021 Tanzil Project",
+  "notice": "Verbatim Quran text; do not modify. Include this notice and link to Tanzil when redistributing. https://tanzil.net/docs/text_license",
+  "scope": "Complete Quran: 114 surahs and 6,236 ayahs.",
+  "upstream_sha256": "bf4f57b968d03f4131c070b1e285da9be0e0a108a21c910e872801ca273312c8"
 }
