@@ -136,24 +136,58 @@ class LegacyContentRepository {
     final title = _str(map['title']).isNotEmpty ? _str(map['title']) : _str(map['name']);
     if (title.isEmpty) return null;
 
-    final rawSteps = map['steps'];
     final steps = <String>[];
+    final questions = <Map<String, dynamic>>[];
+
+    final rawQuestions = map['questions'];
+    if (rawQuestions is List) {
+      for (final question in rawQuestions) {
+        if (question is! Map) continue;
+        final normalized = Map<String, dynamic>.from(question);
+        normalized['question'] = _first([
+          normalized['question'], normalized['prompt'], normalized['text'],
+        ]);
+        if (!normalized.containsKey('answerIndex') && normalized['answer'] is num) {
+          normalized['answerIndex'] = normalized['answer'];
+        }
+        questions.add(normalized);
+      }
+    }
+
+    final rawSteps = map['steps'];
     if (rawSteps is List) {
       for (final step in rawSteps) {
         if (step is String && step.trim().isNotEmpty) {
           steps.add(step.trim());
         } else if (step is Map) {
-          final text = _first([step['text'], step['instruction'], step['label'], step['title'], step['prompt'], step['say']]);
-          if (text.isNotEmpty) steps.add(text);
+          final type = _str(step['type']).toLowerCase();
+          if (type == 'choose' || (step['options'] is List && (step['question'] != null || step['prompt'] != null))) {
+            final options = step['options'];
+            final answer = step['answerIndex'] ?? step['answer'];
+            if (options is List && options.length >= 2 && answer is num) {
+              questions.add({
+                'question': _first([step['question'], step['prompt'], step['text'], step['label']]),
+                'options': options,
+                'answerIndex': answer,
+                'hint': _first([step['hint'], step['feedback']]),
+                'praise': _first([step['praise'], step['rewardText']]),
+              });
+            }
+            continue;
+          }
+          final stepText = _first([
+            step['text'], step['instruction'], step['label'], step['title'],
+            step['say'], step['prompt'], step['description'],
+          ]);
+          if (stepText.isNotEmpty) {
+            steps.add(stepText);
+          } else if (type == 'reward') {
+            final stars = step['stars'];
+            steps.add(stars is num ? 'أكملت النشاط! نجومك: ${stars.toInt()}' : 'أكملت النشاط بنجاح!');
+          } else if (type == 'listen') {
+            steps.add('استمع جيدًا ثم تابع النشاط.');
+          }
         }
-      }
-    }
-
-    final questions = <Map<String, dynamic>>[];
-    final rawQuestions = map['questions'];
-    if (rawQuestions is List) {
-      for (final question in rawQuestions) {
-        if (question is Map) questions.add(Map<String, dynamic>.from(question));
       }
     }
 
@@ -172,7 +206,7 @@ class LegacyContentRepository {
       if (source is Map) _first([source['reference'], source['name'], source['url']]),
       _str(map['narrator']).isEmpty ? '' : 'الراوي: ${_str(map['narrator'])}',
       _str(map['book']).isEmpty ? '' : 'الكتاب: ${_str(map['book'])}',
-      (map['number'] is num || map['number'] is String) ? 'رقم: ${map['number']}' : '',
+      if (map['number'] is num || map['number'] is String) 'رقم: ${map['number']}',
       _str(map['grade']).isEmpty ? '' : 'الدرجة: ${_str(map['grade'])}',
       _str(map['reference']).isEmpty ? '' : _str(map['reference']),
     ].where((part) => part.trim().isNotEmpty).toList();
@@ -192,7 +226,7 @@ class LegacyContentRepository {
       questions: List<Map<String, dynamic>>.unmodifiable(questions),
       week: int.tryParse(weekMatch?.group(1) ?? '') ?? _num(map['week'], 0),
       difficulty: _str(map['difficulty']),
-      category: _str(map['category']),
+      category: _first([map['category'], map['section']]),
       contentVerified: map['content_verified'] == true,
       reviewStatus: _str(map['review_status']).isEmpty ? 'pending' : _str(map['review_status']),
     );
