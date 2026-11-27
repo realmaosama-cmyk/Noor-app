@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: noor-android-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -81,6 +81,7 @@ jobs:
           ./tool/configure_android_branding.sh
 
       - name: Verify signing secrets and configure release signing
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -131,6 +132,7 @@ jobs:
         run: flutter build apk --release
 
       - name: Verify APK signature
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
         working-directory: ${{ env.NOOR_PROJECT_DIR }}
         shell: bash
         run: |
@@ -142,42 +144,9 @@ jobs:
           "$APKSIGNER" verify --verbose "$APK"
           rm -f android/key.properties
 
-      - name: Package normalized source archive
-        working-directory: ${{ env.NOOR_PROJECT_DIR }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          test ! -f android/key.properties
-          mkdir -p "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main"
-          cp -a . "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/"
-          rm -rf "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/build" \
-            "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/.dart_tool" \
-            "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/.packages" \
-            "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/android/.gradle" \
-            "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/android/local.properties" \
-            "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/android/key.properties" \
-            "$RUNNER_TEMP/noor-package/Nour-and-fedaa-main/NOOR_Source.zip"
-          (cd "$RUNNER_TEMP/noor-package" && zip -qr "$RUNNER_TEMP/NOOR_Source.zip" Nour-and-fedaa-main)
-
-      - name: Refresh source archive on the working branch
-        if: github.event_name == 'pull_request'
-        shell: bash
-        run: |
-          set -euo pipefail
-          cp "$RUNNER_TEMP/NOOR_Source.zip" "$GITHUB_WORKSPACE/NOOR_Source.zip"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add NOOR_Source.zip
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: refresh NOOR source archive after signed APK validation"
-            git push origin "HEAD:${GITHUB_HEAD_REF}"
-          fi
-
-      - name: Upload signed APK and source archive
+      - name: Upload APK build result
         uses: actions/upload-artifact@v7
         with:
-          name: NOOR-APK-Release
+          name: ${{ github.event_name == 'pull_request' && 'NOOR-APK-CI-Unsigned' || 'NOOR-APK-Release-Signed' }}
           if-no-files-found: error
-          path: |
-            ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
-            ${{ runner.temp }}/NOOR_Source.zip
+          path: ${{ env.NOOR_PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
