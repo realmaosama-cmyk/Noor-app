@@ -15,7 +15,11 @@
         "اشكر من يساعدك.",
         "إذا أخطأت فاعتذر وحاول الإصلاح."
       ],
-      "source": "القرآن الكريم: إبراهيم 24–25"
+      "source": "القرآن الكريم: إبراهيم 24–25",
+      "category": "akhlaq",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nk_002",
@@ -30,7 +34,11 @@
         "قل ما أزعجك بكلمات واضحة.",
         "اقترح تبادل الأدوار أو اطلب مساعدة بالغ."
       ],
-      "source": "مهارة اجتماعية تربوية؛ حماية الطفل أولاً"
+      "source": "مهارة اجتماعية تربوية؛ حماية الطفل أولاً",
+      "category": "akhlaq",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nk_003",
@@ -45,7 +53,11 @@
         "لا تشارك كلمة المرور أو موقعك أو صورك الخاصة.",
         "أبلغ شخصاً بالغاً موثوقاً عن أي تواصل مريب."
       ],
-      "source": "قواعد أمان رقمي مناسبة للأطفال"
+      "source": "قواعد أمان رقمي مناسبة للأطفال",
+      "category": "akhlaq",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nk_004",
@@ -60,7 +72,11 @@
         "انتظر دورك بهدوء.",
         "اطلب اللعبة بأدب عندما يحين دورك."
       ],
-      "source": "نشاط اجتماعي تربوي"
+      "source": "نشاط اجتماعي تربوي",
+      "category": "akhlaq",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nk_005",
@@ -75,7 +91,11 @@
         "ابتعد إلى مكان فيه بالغ موثوق.",
         "احكِ ما حدث بوضوح واطلب المساعدة."
       ],
-      "source": "إرشادات حماية الطفل ومكافحة التنمر"
+      "source": "إرشادات حماية الطفل ومكافحة التنمر",
+      "category": "akhlaq",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "nk_006",
@@ -90,7 +110,11 @@
         "أعد صياغة ما فهمته من رأي الآخر.",
         "قدم سبباً واضحاً أو قل لا أعرف بعد."
       ],
-      "source": "مهارات الحوار والتفكير النقدي"
+      "source": "مهارات الحوار والتفكير النقدي",
+      "category": "akhlaq",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     }
   ]
 }
