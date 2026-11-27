@@ -138,6 +138,10 @@ for filename, collection, minimum in (
         values = data.get(collection, [])
         if not isinstance(values, list) or len(values) < minimum:
             errors.append(f"{filename}: expected at least {minimum} {collection}, found {len(values) if isinstance(values, list) else 'invalid'}")
+        elif collection == "phrases" and any(
+            not isinstance(phrase, str) or not phrase.strip() for phrase in values
+        ):
+            errors.append(f"{filename}: empty or invalid phrase entry detected")
     except Exception as exc:
         errors.append(f"{filename}: unable to validate migrated content: {exc}")
 
