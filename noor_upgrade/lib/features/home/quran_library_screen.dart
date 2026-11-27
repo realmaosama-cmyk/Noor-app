@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../../core/widgets/noor_brand.dart';
@@ -104,12 +104,12 @@ class _QuranLibraryScreenState extends State<QuranLibraryScreen> {
                       final name = surah['name'] as String;
                       final count = (surah['ayahs'] as List).length;
                       return Material(
-                        color: Theme.of(context).colorScheme.surface.withOpacity(.96),
+                        color: Theme.of(context).colorScheme.surface.withValues(alpha: .96),
                         borderRadius: BorderRadius.circular(20),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(20),
                           onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
+                            MaterialPageRoute<void>(
                               builder: (_) => QuranSurahDetailScreen(surah: surah),
                             ),
                           ),

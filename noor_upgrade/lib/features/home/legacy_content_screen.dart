@@ -64,7 +64,7 @@ class LegacyContentScreen extends ConsumerWidget {
                         subtitle: const Text('فهرس السور المتاحة ونصوص الآيات'),
                         trailing: const Icon(Icons.chevron_left_rounded),
                         onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const QuranLibraryScreen()),
+                          MaterialPageRoute<void>(builder: (_) => const QuranLibraryScreen()),
                         ),
                       ),
                     )
