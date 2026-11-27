@@ -15,7 +15,11 @@
         "اقلب بطاقتين في كل دور.",
         "عند التطابق، اذكر مثالاً للقيمة."
       ],
-      "source": "لعبة أصلية من NOOR"
+      "source": "لعبة أصلية من NOOR",
+      "category": "games",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ng_002",
@@ -30,7 +34,11 @@
         "رتبها من البداية إلى النهاية.",
         "اشرح اختيارك لشخص بالغ."
       ],
-      "source": "لعبة أصلية من NOOR"
+      "source": "لعبة أصلية من NOOR",
+      "category": "games",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ng_003",
@@ -45,7 +53,11 @@
         "اقترح حلين على الأقل.",
         "جرب الحل وسجل ما ستطوره."
       ],
-      "source": "أنشطة STEM أصلية من NOOR"
+      "source": "أنشطة STEM أصلية من NOOR",
+      "category": "games",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ng_004",
@@ -60,7 +72,11 @@
         "ابحث عن صورتين تبدأان به.",
         "انطق الحرف والكلمة معاً."
       ],
-      "source": "لعبة لغوية أصلية من NOOR"
+      "source": "لعبة لغوية أصلية من NOOR",
+      "category": "games",
+      "difficulty": "easy",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ng_005",
@@ -75,7 +91,11 @@
         "أضف أو أزل عدداً صغيراً.",
         "اشرح كيف وصلت إلى الإجابة."
       ],
-      "source": "لعبة رياضيات أصلية من NOOR"
+      "source": "لعبة رياضيات أصلية من NOOR",
+      "category": "games",
+      "difficulty": "medium",
+      "content_verified": false,
+      "review_status": "pending"
     },
     {
       "id": "ng_006",
@@ -90,7 +110,11 @@
         "ابنِ النموذج بمواد آمنة.",
         "اختبره وسجل تحسيناً واحداً."
       ],
-      "source": "تحدي STEM أصلي من NOOR"
+      "source": "تحدي STEM أصلي من NOOR",
+      "category": "games",
+      "difficulty": "advanced",
+      "content_verified": false,
+      "review_status": "pending"
     }
   ]
 }
