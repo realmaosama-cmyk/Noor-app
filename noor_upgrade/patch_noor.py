@@ -3,62 +3,36 @@ import sys
 
 root = Path(sys.argv[1])
 
-# Bring the legacy content library into the existing section experience.
-section_path = root / 'lib/features/home/section_screen.dart'
-section = section_path.read_text(encoding='utf-8')
-import_line = "import '../../data/content/legacy_content.dart';\n"
-if import_line not in section:
-    anchor = "import '../../data/content/catalog.dart';\n"
-    if anchor not in section:
-        raise SystemExit('Could not find catalog import in section_screen.dart')
-    section = section.replace(anchor, anchor + import_line, 1)
-if "LegacyContentRepository.loadForSection" not in section:
-    insertion = section.find('if (lessons.isEmpty)')
-    if insertion < 0:
-        insertion = section.find('for (final lesson in lessons)')
-    if insertion < 0:
-        raise SystemExit('Could not locate the section lesson list in section_screen.dart')
-    widget = r'''
-                    FutureBuilder<List<LegacyContentItem>>(
-                        future: LegacyContentRepository.loadForSection(section.id, c.age),
-                        builder: (context, snapshot) {
-                          final items = snapshot.data ?? const <LegacyContentItem>[];
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Padding(
-                                padding: EdgeInsets.all(18),
-                                child: Center(child: CircularProgressIndicator()));
-                          }
-                          if (items.isEmpty) return const SizedBox.shrink();
-                          return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 22, bottom: 10),
-                                    child: Text('من مكتبة نور وفداء',
-                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w900))),
-                                for (final item in items)
-                                  Card(
-                                      child: ExpansionTile(
-                                          leading: CircleAvatar(child: Text(item.emoji)),
-                                          title: Text(item.title),
-                                          subtitle: Text(item.summary, maxLines: 2, overflow: TextOverflow.ellipsis),
-                                          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                                          children: [
-                                            Align(alignment: Alignment.centerRight,
-                                                child: Text(item.body, style: const TextStyle(fontSize: 16, height: 1.7))),
-                                            if (item.source.isNotEmpty) ...[
-                                              const SizedBox(height: 10),
-                                              Align(alignment: Alignment.centerRight,
-                                                  child: Text('المصدر: ${item.source}', style: const TextStyle(fontSize: 11, color: Colors.grey)))
-                                            ]
-                                          ]))
-                              ]);
-                        }),
-'''
-    section = section[:insertion] + widget + section[insertion:]
-section_path.write_text(section, encoding='utf-8')
+router_path = root / 'lib/core/router/app_router.dart'
+router = router_path.read_text(encoding='utf-8')
+router_import = "import '../../features/home/legacy_content_screen.dart';\n"
+if router_import not in router:
+    anchor = "import '../../features/home/library_screen.dart';\n"
+    if anchor not in router:
+        raise SystemExit('Could not find the app router library import')
+    router = router.replace(anchor, anchor + router_import, 1)
+route = "GoRoute(path: '/legacy-content', builder: (_, __) => const LegacyContentScreen()),\n      "
+if "path: '/legacy-content'" not in router:
+    anchor = "GoRoute(path: '/library', builder: (_, __) => const LibraryScreen()),"
+    if anchor not in router:
+        raise SystemExit('Could not find the app library route')
+    router = router.replace(anchor, route + anchor, 1)
+router_path.write_text(router, encoding='utf-8')
 
-# Add nested legacy content directories to Flutter's asset manifest.
+home_path = root / 'lib/features/home/home_screen.dart'
+home = home_path.read_text(encoding='utf-8')
+if "context.push('/legacy-content')" not in home:
+    anchor = "          IconButton(\n              tooltip: 'المكتبة',"
+    button = """          IconButton(
+              tooltip: 'مكتبة نور وفداء',
+              onPressed: () => context.push('/legacy-content'),
+              icon: const Icon(Icons.auto_awesome_rounded)),
+"""
+    if anchor not in home:
+        raise SystemExit('Could not find the home library shortcut')
+    home = home.replace(anchor, button + anchor, 1)
+home_path.write_text(home, encoding='utf-8')
+
 pubspec_path = root / 'pubspec.yaml'
 pubspec = pubspec_path.read_text(encoding='utf-8')
 for asset_dir in ('    - assets/content/legacy/\n', '    - assets/content/legacy/lessons/\n', '    - assets/content/legacy/levelcheck/\n'):
@@ -66,7 +40,6 @@ for asset_dir in ('    - assets/content/legacy/\n', '    - assets/content/legacy
         pubspec = pubspec.replace('    - assets/content/\n', '    - assets/content/\n' + asset_dir, 1)
 pubspec_path.write_text(pubspec, encoding='utf-8')
 
-# Refresh the Android adaptive launcher mark to an open book and guiding star.
 branding_path = root / 'tool/configure_android_branding.sh'
 branding = branding_path.read_text(encoding='utf-8')
 old_paths = '''    <path android:fillColor="#FFFFFFFF" android:pathData="M54,20 L62,43 L85,54 L62,62 L54,86 L45,62 L23,54 L45,43 Z" />
@@ -81,7 +54,6 @@ if old_paths in branding:
     branding = branding.replace(old_paths, new_paths, 1)
 branding_path.write_text(branding, encoding='utf-8')
 
-# Replace the old compass-only mark with the new book, crescent and star symbol.
 brand_path = root / 'lib/core/widgets/noor_brand.dart'
 brand = brand_path.read_text(encoding='utf-8')
 start = brand.index('class _NoorMark extends StatefulWidget {')
@@ -91,7 +63,6 @@ brand = brand[:start] + fragment + '\n' + brand[end:]
 brand = brand.replace('NOOR • LEARN & PLAY', 'NOOR • LEARN • GROW • SHINE')
 brand_path.write_text(brand, encoding='utf-8')
 
-# Ship a scalable master logo alongside the in-app animated mark.
 logo_svg = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" role="img" aria-labelledby="title desc">
   <title id="title">نور | NOOR</title>
   <desc id="desc">A crescent, guiding star and open book representing light and learning.</desc>
