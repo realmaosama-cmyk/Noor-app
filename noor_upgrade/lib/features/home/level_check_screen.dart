@@ -40,6 +40,7 @@ class _LevelCheckScreenState extends State<LevelCheckScreen> {
           (q['text'] as String).trim().isEmpty ||
           options is! List ||
           options.length < 2 ||
+          options.any((option) => option is! String || option.trim().isEmpty) ||
           answer is! int ||
           answer < 0 ||
           answer >= options.length;
