@@ -160,10 +160,10 @@ class LegacyContentRepository {
     final body = _first([
       map['hadithText'], map['hadith'], map['matn'], map['verseText'], map['arabicText'], map['arabic'], map['verse'],
       map['content'], map['text'], map['body'], map['kidMeaning'],
-      map['goal'], map['intro'], map['summary'],
+      map['goal'], map['intro'],
     ]);
     final stepText = steps.join(' • ');
-    final finalBody = body.isNotEmpty ? body : stepText;
+    final finalBody = body.isNotEmpty ? body : stepText.isNotEmpty ? stepText : _str(map['summary']);
     if (finalBody.isEmpty && questions.isEmpty) return null;
 
     final source = map['source'];
