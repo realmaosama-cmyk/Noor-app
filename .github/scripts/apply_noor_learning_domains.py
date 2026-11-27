@@ -30,9 +30,14 @@ if "learning_domains.dart" not in h:
 if "اختر طريق رحلتك" not in h:
     title_at = h.find('خريطة مغامرتك')
     if title_at < 0: title_at = h.find('GridView.builder(')
-    start = h.rfind('                    NoorEntrance(', 0, title_at)
-    end = h.find('                    const SizedBox(height: 19),', title_at)
-    if title_at < 0 or start < 0 or end < 0: raise SystemExit("Original home-world section not found safely")
+    grid_at = h.find('GridView.builder(', title_at)
+    start_marker = h.rfind('NoorEntrance(', 0, title_at)
+    mission_marker = h.find('delay: visible.length + 3,', grid_at)
+    if title_at < 0 or grid_at < 0 or start_marker < 0 or mission_marker < 0:
+        raise SystemExit("Original home-world section not found safely")
+    start = h.rfind('\n', 0, start_marker) + 1
+    mission_start = h.rfind('NoorEntrance(', 0, mission_marker)
+    end = h.rfind('\n', 0, mission_start) + 1
     replacement = """                    NoorEntrance(delay: 1, child: Row(children: [
                       Expanded(child: Text('اختر طريق رحلتك', style: Theme.of(context).textTheme.titleLarge)),
                       Text('${visible.length} مجالًا', style: const TextStyle(color: AppColors.teal, fontWeight: FontWeight.w800)),
