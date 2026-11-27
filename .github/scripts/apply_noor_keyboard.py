@@ -211,13 +211,17 @@ if re.search(r"\bonTap\s*:", block):
 
 # Prevent the Android system keyboard from covering the form; use the in-app keyboard.
 insert_at = opening + 1
-properties = (
-    "\n      readOnly: true,"
-    "\n      keyboardType: TextInputType.none,"
-    "\n      autofocus: true,"
-    "\n      onTap: _openNoorNameKeyboard,"
-)
-source = source[:insert_at] + properties + source[insert_at:]
+properties = []
+if not re.search(r"\breadOnly\s*:", block):
+    properties.append("readOnly: true,")
+if not re.search(r"\bkeyboardType\s*:", block):
+    properties.append("keyboardType: TextInputType.none,")
+if not re.search(r"\bautofocus\s*:", block):
+    properties.append("autofocus: true,")
+if not re.search(r"\bonTap\s*:", block):
+    properties.append("onTap: _openNoorNameKeyboard,")
+if properties:
+    source = source[:insert_at] + "\n      " + "\n      ".join(properties) + source[insert_at:]
 
 # Add an explicit keyboard affordance to the field decoration.
 field_start = start
